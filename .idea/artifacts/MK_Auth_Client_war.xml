@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="MK-Auth-Client:war">
+    <output-path>$PROJECT_DIR$/MK-Auth-Client/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>MK-Auth-Client</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="cloud-auth-client.war">
+      <element id="artifact" artifact-name="MK-Auth-Client:war exploded" />
+    </root>
+  </artifact>
+</component>
