@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -29,6 +30,11 @@ import javax.annotation.Resource;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter
 {
+    @Bean
+    public BCryptPasswordEncoder encodeHelper()
+    {
+        return new BCryptPasswordEncoder();
+    }
 
     @Qualifier("authenicationManager")
     private AuthenticationManager authenticationManager;
@@ -66,7 +72,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
         .authorizedGrantTypes("authorization_code","refresh_token")  // 授权码模式
         .scopes("test")  // 授权范围 test
-        .secret(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123456"))
+        .secret("123456") // 不需要加密了
         .redirectUris("http://www.baidu.com"); // 客户端与授权服务器的安全码
     }
 
@@ -82,7 +88,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
     {
         endpoints.authenticationManager(authenticationManager)  // 放置鉴权管理器
-                .tokenStore(generateToken())     // 配置token的store
+                .tokenStore(generateToken())    // 配置token的store
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .userDetailsService(userDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }

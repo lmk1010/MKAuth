@@ -22,3 +22,8 @@ security:
       user-authorization-uri: ${auth-server-url}/oauth/authorize
     resource:
       token-info-uri: ${auth-server-url}/oauth/check_token
+
+logging:
+  level:
+    com.mk : debug
+    org.springframework.boot: debug

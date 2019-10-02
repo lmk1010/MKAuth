@@ -1,9 +1,8 @@
 package com.mk.auth.api;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,5 +26,11 @@ public class TestController
         result.put("code","200");
         result.put("role","USER");
         return result;
+    }
+
+    @GetMapping("getinfo")
+    public Authentication getuser(Authentication authentication)
+    {
+        return authentication;
     }
 }
