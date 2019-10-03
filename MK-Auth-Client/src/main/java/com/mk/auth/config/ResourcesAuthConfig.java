@@ -2,6 +2,8 @@ package com.mk.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -10,6 +12,8 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import java.io.*;
 
 /**
  * @Author liumingkang
@@ -37,8 +41,41 @@ public class ResourcesAuthConfig extends ResourceServerConfigurerAdapter
     public JwtAccessTokenConverter jwtAccessTokenConverter()
     {
         final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setSigningKey("testkey");
+        // 对称加密时候 jwtAccessTokenConverter.setSigningKey("testkey");
+        // 非对称加密 需要把公钥的存储读出
+        String publicKey = "";
+        Resource publicKeyRes = new ClassPathResource("public.txt");
+
+        try {
+            publicKey = inputStreamFromFileToString(publicKeyRes.getInputStream());
+        } catch (IOException e) {
+            // todo 改为logger 统一异常类
+            e.printStackTrace();
+        }
+        // todo 校验publickey的
+
+
+        jwtAccessTokenConverter.setVerifierKey(publicKey);
         return jwtAccessTokenConverter;
+    }
+
+    /**
+    *
+     * @Author liumingkang
+     * @Description 将文件里的数据读出转为字符串
+     * @Date 14:44 2019-10-03
+     * @Param [io]
+     * @return java.lang.String
+     **/
+    private String inputStreamFromFileToString(InputStream io) throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(io));
+        StringBuffer sb = new StringBuffer();
+        String line = "";
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
     }
 
     /**
