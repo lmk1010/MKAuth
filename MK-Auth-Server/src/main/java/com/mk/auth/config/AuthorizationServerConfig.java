@@ -17,13 +17,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.annotation.Resource;
 
 /**
  * @Author liumingkang
  * @Date 2019-10-02 19:41
- * @Destcription 授权服务配置
+ * @Destcription 授权服务配置 JWT改造
  * @Version 1.0
  **/
 @Configuration
@@ -42,7 +44,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Qualifier("userDetailsService")
     UserDetailsService userDetailsService;
 
-    /*
+    /**
     *
      * @Author liumingkang
      * @Description 配置令牌的安全约束
@@ -54,10 +56,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception
     {
         security.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()").allowFormAuthenticationForClients();
+                .checkTokenAccess("permitAll()")
+                .allowFormAuthenticationForClients();
     }
 
-    /*
+    /**
     *
      * @Author liumingkang
      * @Description 配置客户端的信息 主要用于和授权服务器的交互配置  包括密码等
@@ -76,7 +79,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         .redirectUris("http://www.baidu.com"); // 客户端与授权服务器的安全码
     }
 
-    /*
+    /**
     *
      * @Author liumingkang
      * @Description 配置令牌的访问服务 和 令牌服务
@@ -89,22 +92,42 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     {
         endpoints.authenticationManager(authenticationManager)  // 放置鉴权管理器
                 .tokenStore(generateToken())    // 配置token的store
+                .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .userDetailsService(userDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }
 
 
-    /*
+    /**
     *
      * @Author liumingkang
-     * @Description 用于生成token 仅限于内存中时候使用 用于Demo
-     * @Date 19:53 2019-10-02
+     * @Description //TODO JWT生成token
+     * @Date 11:53 2019-10-03
      * @Param []
      * @return org.springframework.security.oauth2.provider.token.TokenStore
      **/
     @Bean
     public TokenStore generateToken()
     {
-        return new InMemoryTokenStore();
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
+
+
+    /**
+    *
+     * @Author liumingkang
+     * @Description JWT的转换器
+     * @Date 11:51 2019-10-03
+     * @Param []
+     * @return org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
+     **/
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter()
+    {
+        final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        jwtAccessTokenConverter.setSigningKey("testkey");
+        return jwtAccessTokenConverter;
+    }
+
+
 }
