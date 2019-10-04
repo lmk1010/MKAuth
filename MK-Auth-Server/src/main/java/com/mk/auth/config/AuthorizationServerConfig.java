@@ -1,5 +1,7 @@
 package com.mk.auth.config;
 
+import com.google.common.collect.Lists;
+import com.mk.auth.token.MKTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -23,6 +27,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * @Author liumingkang
@@ -92,10 +97,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
     {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(mkTokenEnhancer(),jwtAccessTokenConverter()));
+
         endpoints.authenticationManager(authenticationManager)  // 放置鉴权管理器
                 .tokenStore(generateToken())    // 配置token的store
                 .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
+                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
                 .userDetailsService(userDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }
 
@@ -112,6 +121,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public TokenStore generateToken()
     {
         return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+
+    /**
+    *
+     * @Author liumingkang
+     * @Description token增加信息
+     * @Date 08:10 2019-10-04
+     * @Param []
+     * @return org.springframework.security.oauth2.provider.token.TokenEnhancer
+     **/
+    @Bean
+    public TokenEnhancer mkTokenEnhancer()
+    {
+        return new MKTokenEnhancer();
     }
 
 
