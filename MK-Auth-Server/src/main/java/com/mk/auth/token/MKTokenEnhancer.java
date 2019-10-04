@@ -40,6 +40,7 @@ public class MKTokenEnhancer implements TokenEnhancer
         String username = user.getUsername();
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
 
+        // todo 目前只增加了用户名和权限 后期可以根据业务加
         additionInfo.put("username",username);
         additionInfo.put("authority",authorities);
 

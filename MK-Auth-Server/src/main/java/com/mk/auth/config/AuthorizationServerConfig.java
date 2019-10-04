@@ -1,6 +1,7 @@
 package com.mk.auth.config;
 
 import com.google.common.collect.Lists;
+import com.mk.auth.token.MKTokenConvert;
 import com.mk.auth.token.MKTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +22,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -156,6 +156,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"),"mypass".toCharArray());
         // 放置公钥私钥
         jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
+        // fixme 修改默认的转换器
+        // jwtAccessTokenConverter.setAccessTokenConverter(new MKTokenConvert());
         return jwtAccessTokenConverter;
     }
 
