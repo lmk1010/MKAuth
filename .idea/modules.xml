@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MK-Auth-Client/MK-Auth-Client.iml" filepath="$PROJECT_DIR$/MK-Auth-Client/MK-Auth-Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MK-Auth-Resources/MK-Auth-Resources.iml" filepath="$PROJECT_DIR$/MK-Auth-Resources/MK-Auth-Resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/MK-Auth-Server/MK-Auth-Server.iml" filepath="$PROJECT_DIR$/MK-Auth-Server/MK-Auth-Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MKAuth.iml" filepath="$PROJECT_DIR$/.idea/MKAuth.iml" />
     </modules>
