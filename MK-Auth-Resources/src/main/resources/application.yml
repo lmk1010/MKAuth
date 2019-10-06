@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cloud-auth-client
+    name: cloud-auth-resources
 
 
 auth-server-url: http://localhost:18003  # 授权服务地址

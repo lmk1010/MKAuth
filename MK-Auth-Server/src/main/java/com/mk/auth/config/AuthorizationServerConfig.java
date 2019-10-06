@@ -83,7 +83,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         .authorizedGrantTypes("authorization_code","refresh_token")  // 授权码模式
         .scopes("test")  // 授权范围 test
         .secret("123456") // 不需要加密了
-        .redirectUris("http://www.baidu.com"); // 客户端与授权服务器的安全码
+        .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
     }
 
     /**

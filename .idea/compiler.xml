@@ -11,9 +11,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="MK-Auth-Resources" target="1.7" />
-      <module name="MK-Auth-Server" target="1.7" />
-      <module name="MKAuth" target="1.5" />
+      <module name="MK-Auth-Resources" target="1.8" />
+      <module name="MK-Auth-Server" target="1.8" />
+      <module name="MKAuth" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
