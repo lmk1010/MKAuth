@@ -11,7 +11,7 @@
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="MK-Auth-Server" />
+          <element id="module-output" name="MK-Authorization" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-web:2.1.7.RELEASE" />
@@ -80,9 +80,9 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/MK-Auth-Server/target/cloud-auth-server/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/MK-Authorization/target/cloud-auth-server/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="MK-Auth-Server/web/Web" />
+      <element id="javaee-facet-resources" facet="MK-Authorization/web/Web" />
     </root>
   </artifact>
 </component>

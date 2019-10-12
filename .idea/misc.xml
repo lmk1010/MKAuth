@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/cloud-auth-resource" />
     <file type="web" url="file://$PROJECT_DIR$/MK-Auth-Resources" />
-    <file type="web" url="file://$PROJECT_DIR$/MK-Auth-Server" />
+    <file type="web" url="file://$PROJECT_DIR$/MK-Authenication" />
+    <file type="web" url="file://$PROJECT_DIR$/MK-Authorization" />
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
