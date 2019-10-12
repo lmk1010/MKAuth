@@ -45,8 +45,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new BCryptPasswordEncoder();
     }
 
-    @Qualifier("authenicationManager")
-    private AuthenticationManager authenticationManager;
+    @Autowired
+    public AuthenticationManager authenticationManager;
 
     @Qualifier("userDetailsService")
     UserDetailsService userDetailsService;
@@ -80,7 +80,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     {
         // 暂时使用内存方式存储密码的方式
         clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
-        .authorizedGrantTypes("authorization_code","refresh_token")  // 授权码模式
+        .authorizedGrantTypes("authorization_code","password","refresh_token")  // 密码模式
         .scopes("test")  // 授权范围 test
         .secret("123456") // 不需要加密了
         .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
@@ -104,7 +104,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenStore(generateToken())    // 配置token的store
                 .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
+//                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
                 .userDetailsService(userDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }
 
@@ -151,11 +151,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public JwtAccessTokenConverter jwtAccessTokenConverter()
     {
         final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        // 之前使用对称加密的方式 jwtAccessTokenConverter.setSigningKey("testkey");
+        // 之前使用对称加密的方式
+        jwtAccessTokenConverter.setSigningKey("testkey");
         // 现在使用非对称加密 读取jks文件 找到密码
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"),"mypass".toCharArray());
+        // KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"),"mypass".toCharArray());
         // 放置公钥私钥
-        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
+        // jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
         // fixme 修改默认的转换器
         // jwtAccessTokenConverter.setAccessTokenConverter(new MKTokenConvert());
         return jwtAccessTokenConverter;

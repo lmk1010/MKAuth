@@ -34,15 +34,15 @@ public class MKTokenEnhancer implements TokenEnhancer
         final Map<String,Object> additionInfo = Maps.newHashMap();
 
         // 要添加的额外信息
-        authentication.getUserAuthentication().getDetails();
+        //authentication.getUserAuthentication().getDetails();
 
         UserDetails user = (UserDetails) authentication.getUserAuthentication().getPrincipal();
         String username = user.getUsername();
-        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        // Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
 
         // todo 目前只增加了用户名和权限 后期可以根据业务加
         additionInfo.put("username",username);
-        additionInfo.put("authority",authorities);
+        // additionInfo.put("authority",authorities);
 
         DefaultOAuth2AccessToken oAuth2AccessToken = (DefaultOAuth2AccessToken) accessToken;
         oAuth2AccessToken.setAdditionalInformation(additionInfo);

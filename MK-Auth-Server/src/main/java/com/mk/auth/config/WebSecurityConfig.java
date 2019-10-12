@@ -9,15 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import java.util.ArrayList;
 
@@ -63,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
      * @Param []
      * @return org.springframework.security.authentication.AuthenticationManager
      **/
-    @Bean("authenicationManager")
+    @Bean(name = "authenicationManager")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -77,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
      * @Param []
      * @return org.springframework.security.core.userdetails.UserDetailsService
      **/
-    @Bean("userDetailsService")
+    @Bean(name = "userDetailsService")
     @Override
     protected UserDetailsService userDetailsService()
     {

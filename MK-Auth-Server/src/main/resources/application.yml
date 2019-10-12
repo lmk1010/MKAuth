@@ -8,3 +8,8 @@ server:
 logging:
   level:
     com.mk : debug
+    org:
+      springframework:
+        web:
+          debug
+    

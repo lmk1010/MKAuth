@@ -1,10 +1,12 @@
 package com.mk.auth.config;
 
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -41,21 +43,21 @@ public class ResourcesAuthConfig extends ResourceServerConfigurerAdapter
     public JwtAccessTokenConverter jwtAccessTokenConverter()
     {
         final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        // 对称加密时候 jwtAccessTokenConverter.setSigningKey("testkey");
+        // 对称加密时候
+         jwtAccessTokenConverter.setSigningKey("testkey");
         // 非对称加密 需要把公钥的存储读出
-        String publicKey = "";
-        Resource publicKeyRes = new ClassPathResource("public.txt");
-
-        try {
-            publicKey = inputStreamFromFileToString(publicKeyRes.getInputStream());
-        } catch (IOException e) {
-            // todo 改为logger 统一异常类
-            e.printStackTrace();
-        }
-        // todo 校验publickey的
-
-
-        jwtAccessTokenConverter.setVerifierKey(publicKey);
+//        String publicKey = "";
+//        Resource publicKeyRes = new ClassPathResource("public.txt");
+//
+//        try {
+//            publicKey = inputStreamFromFileToString(publicKeyRes.getInputStream());
+//        } catch (IOException e) {
+//            // todo 改为logger 统一异常类
+//            e.printStackTrace();
+//        }
+//        // todo 校验publickey的
+//
+//        jwtAccessTokenConverter.setVerifierKey(publicKey);
         return jwtAccessTokenConverter;
     }
 

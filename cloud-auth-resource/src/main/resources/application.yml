@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cloud-auth-client
+    name: cloud-auth-resources
 
 
 auth-server-url: http://localhost:18003  # 授权服务地址
@@ -23,7 +23,11 @@ security:
     resource:
       token-info-uri: ${auth-server-url}/oauth/check_token
 
+
 logging:
   level:
     com.mk : debug
-    org.springframework.boot: debug
+    org:
+      springframework:
+        web:
+          debug

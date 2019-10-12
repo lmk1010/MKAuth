@@ -1,6 +1,7 @@
 package com.mk.auth.api;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/oauth/")
+@Slf4j
 public class Oauth2Controller
 {
 
@@ -23,5 +25,14 @@ public class Oauth2Controller
         Map<String,Object> res = Maps.newHashMap();
         res.put("code",code);
         return res;
+    }
+
+    @RequestMapping(value = "getTest",method = RequestMethod.GET)
+    @ResponseBody
+    public String testApi()
+    {
+        log.info("测试日志输出！------------");
+        log.debug("测试DEBUG日志输出------------");
+        return "success";
     }
 }
