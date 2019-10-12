@@ -14,13 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import java.util.ArrayList;
 
 /**
  * @Author liumingkang
  * @Date 2019-10-02 20:37
- * @Destcription WEB的安全配置
+ * @Destcription 整个系统的登陆安全配置
  * @Version 1.0
  **/
 @Configuration
@@ -92,6 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 
         // 将用户加入到内存的用户认证里面
         // todo 要改为JDBC的manager
+
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(users);
 
         return manager;
