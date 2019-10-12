@@ -82,7 +82,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
         .authorizedGrantTypes("authorization_code","password","refresh_token")  // 密码模式
         .scopes("test")  // 授权范围 test
-        .secret("123456") // 不需要加密了
+        .secret(encodeHelper().encode("123456")) // 更新jar包之后还是需要加密
         .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
     }
 

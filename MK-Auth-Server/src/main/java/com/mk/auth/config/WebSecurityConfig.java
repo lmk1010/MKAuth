@@ -88,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 
         // 此时的密码必须要加密才可以被识别
         // 发现password不需要encode了
-        User user = new User("lmk1010","1010",authorities);
+        User user = new User("lmk1010",encoder.encode("1010"),authorities);
         users.add(user);
 
         // 将用户加入到内存的用户认证里面
