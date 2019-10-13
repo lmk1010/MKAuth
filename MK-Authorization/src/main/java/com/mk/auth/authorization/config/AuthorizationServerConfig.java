@@ -78,12 +78,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception
     {
         clients.withClientDetails(authClientDetailsService);
-        // 暂时使用内存方式存储密码的方式
-//        clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
-//        .authorizedGrantTypes("authorization_code","password","refresh_token")  // 密码模式
-//        .scopes("test")  // 授权范围 test
-//        .secret(encodeHelper().encode("123456")) // 更新jar包之后还是需要加密
-//        .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
     }
 
     /**
@@ -105,7 +99,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
 //                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
-                .userDetailsService(authUserDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
+                .userDetailsService(authUserDetailsService)
+                .setClientDetailsService(authClientDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }
 
 

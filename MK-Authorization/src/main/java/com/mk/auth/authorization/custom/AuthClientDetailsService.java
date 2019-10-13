@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mk.auth.authorization.entity.Client;
 import com.mk.auth.authorization.service.ClientService;
+import com.mk.auth.authorization.service.impl.AuthUserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -16,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @Author liumingkang
@@ -26,6 +30,7 @@ import java.util.Set;
 @Service("authClientDetailsService")
 public class AuthClientDetailsService implements ClientDetailsService
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthClientDetailsService.class);
 
     @Resource(name = "clientService")
     private ClientService clientService;
@@ -35,6 +40,8 @@ public class AuthClientDetailsService implements ClientDetailsService
     {
         /** 注意 db中clientName 即为ClientID **/
         Client client = clientService.findClient(clientId);
+
+        LOGGER.info("client is :{}",client.toString());
 
         return generateClientDetails(client);
     }
@@ -57,15 +64,15 @@ public class AuthClientDetailsService implements ClientDetailsService
         String[] redirectUrls = redirectUrl.split(",");
 
         ArrayList<String> scopeList = Lists.newArrayList();
-        ArrayList<String> grandList = Lists.newArrayList();
+        Set<String> authorizedGrantTypes = new TreeSet<String>();
         Set<String> redirectUrlList = Sets.newHashSet();
 
         Collections.addAll(scopeList, scopes);
-        Collections.addAll(grandList, grandtype);
+        Collections.addAll(authorizedGrantTypes, grandtype);
         Collections.addAll(redirectUrlList,redirectUrls);
 
-        baseClientDetails.setAuthorizedGrantTypes(scopeList);
-        baseClientDetails.setScope(grandList);
+        baseClientDetails.setAuthorizedGrantTypes(authorizedGrantTypes);
+        baseClientDetails.setScope(scopeList);
         baseClientDetails.setRegisteredRedirectUri(redirectUrlList);
 
         return baseClientDetails;
