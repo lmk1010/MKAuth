@@ -29,8 +29,7 @@ import java.util.ArrayList;
  **/
 @Configuration
 @EnableWebSecurity  // 开启WEB的权限验证
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource(name = "authUserDetailService")
     AuthUserDetailsService authUserDetailsService;
@@ -52,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().authorizeRequests()
-                .antMatchers("/oauth/**","/login")
+                .antMatchers("/oauth/**", "/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -60,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     }
 
     /*
-    *
+     *
      * @Author liumingkang
      * @Description 配置自定义的AuthCatManager
      * @Date 20:45 2019-10-02
@@ -73,37 +72,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         return super.authenticationManagerBean();
     }
 
-
-    /*
-    *
-     * @Author liumingkang
-     * @Description 配置用户信息密码获取的入口 fixme 弃用
-     * @Date 20:46 2019-10-02
-     * @Param []
-     * @return org.springframework.security.core.userdetails.UserDetailsService
-     **/
-//    @Bean(name = "userDetailsService")
-//    @Override
-//    protected UserDetailsService userDetailsService()
-//    {
-//        // 配置权限类型
-//        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//        ArrayList<UserDetails> users = new ArrayList<>();
-//
-//        // 设定一个USER角色的权限
-//        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
-//        authorities.add(simpleGrantedAuthority);
-//
-//        // 此时的密码必须要加密才可以被识别
-//        // 发现password不需要encode了
-//        User user = new User("lmk1010",encoder.encode("1010"),authorities);
-//        users.add(user);
-//
-//        // 将用户加入到内存的用户认证里面
-//        // todo 要改为JDBC的manager
-//
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager(users);
-//
-//        return manager;
-//    }
 }
+

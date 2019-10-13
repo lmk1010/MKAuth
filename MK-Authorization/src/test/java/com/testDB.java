@@ -2,14 +2,17 @@ package com;
 
 import com.mk.auth.authorization.AuthorizationApplication;
 import com.mk.auth.authorization.entity.AuthUser;
+import com.mk.auth.authorization.entity.Client;
 import com.mk.auth.authorization.model.UserAuthorityEnum;
 import com.mk.auth.authorization.service.AuthUserService;
+import com.mk.auth.authorization.service.ClientService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import sun.misc.Cleaner;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -28,6 +31,9 @@ public class testDB
     @Autowired
     private AuthUserService authUserService;
 
+    @Autowired
+    private ClientService clientService;
+
     @Test
     public void testInsertAuthUser()
     {
@@ -44,6 +50,27 @@ public class testDB
 //        }
         AuthUser lmk1010 = authUserService.findAuthUser("lmk1010");
         System.out.println(lmk1010.toString());
+    }
+
+
+    @Test
+    public void testInsertClient()
+    {
+//        Client client = new Client();
+//        client.setClientName("MiscorService");
+//        client.setGrandTypes("authorization_code");
+//        client.setClientPass(new BCryptPasswordEncoder().encode("123456"));
+//        client.setRedirectUrl("http://localhost:18003/oauth/getAccessToken");
+//        client.setScope("test");
+//
+//        clientService.createNewClient(client);
+        List<Client> allClients = clientService.findAllClients();
+
+        for (Client client : allClients)
+        {
+            System.out.println(client.toString());
+        }
+
     }
 
 

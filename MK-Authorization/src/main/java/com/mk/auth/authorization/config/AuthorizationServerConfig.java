@@ -1,5 +1,6 @@
 package com.mk.auth.authorization.config;
 
+import com.mk.auth.authorization.custom.AuthClientDetailsService;
 import com.mk.auth.authorization.custom.AuthUserDetailsService;
 import com.mk.auth.authorization.token.MKTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public AuthenticationManager authenticationManager;
 
     @Resource(name = "authUserDetailService")
-    AuthUserDetailsService authUserDetailsService;
+    private AuthUserDetailsService authUserDetailsService;
+
+    @Resource(name = "authClientDetailsService")
+    private AuthClientDetailsService authClientDetailsService;
 
     /**
     *
@@ -73,12 +77,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception
     {
+        clients.withClientDetails(authClientDetailsService);
         // 暂时使用内存方式存储密码的方式
-        clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
-        .authorizedGrantTypes("authorization_code","password","refresh_token")  // 密码模式
-        .scopes("test")  // 授权范围 test
-        .secret(encodeHelper().encode("123456")) // 更新jar包之后还是需要加密
-        .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
+//        clients.inMemory().withClient("MiscorService")  // 客户端的唯一ID
+//        .authorizedGrantTypes("authorization_code","password","refresh_token")  // 密码模式
+//        .scopes("test")  // 授权范围 test
+//        .secret(encodeHelper().encode("123456")) // 更新jar包之后还是需要加密
+//        .redirectUris("http://localhost:18003/oauth/getAccessToken"); // 客户端与授权服务器的安全码
     }
 
     /**

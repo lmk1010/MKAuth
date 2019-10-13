@@ -37,6 +37,14 @@ public class AuthUserDetailsService implements UserDetailsService
     }
 
 
+    /**
+    *
+     * @Author liumingkang
+     * @Description 生成userDetails
+     * @Date 13:58 2019-10-13
+     * @Param [authUser]
+     * @return org.springframework.security.core.userdetails.UserDetails
+     **/
     private UserDetails generateUserDetails(AuthUser authUser)
     {
         ArrayList<SimpleGrantedAuthority> authorityArrayList = Lists.newArrayList();
