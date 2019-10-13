@@ -42,6 +42,7 @@ public class AuthUserServiceImpl implements AuthUserService
         if (null == authorities)
         {
             /** 若权限为空 默认赋予USER权限 */
+            LOGGER.info("check authorities is empty;use normal authorities config");
             authorities = UserAuthorityEnum.USER.toString();
         }
         if (checkAuthoritiesRule(authorities))
@@ -76,16 +77,16 @@ public class AuthUserServiceImpl implements AuthUserService
         if (pattern.matcher(authorities).find())
         {
             LOGGER.warn("authorities regex is not correct!");
-            return false;
+            return true;
         }
 
         String[] res = authorities.split(",");
         if (res.length == 0)
         {
             LOGGER.warn("authorities is empty!");
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

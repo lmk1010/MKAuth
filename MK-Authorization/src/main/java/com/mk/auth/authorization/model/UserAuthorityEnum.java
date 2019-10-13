@@ -9,9 +9,8 @@ package com.mk.auth.authorization.model;
 public enum UserAuthorityEnum
 {
 
-    ADMIN("extreme_admin"),
-    VISITOR("only_see"),
-    USER("common_user");
+    ADMIN("EXADMIN"),
+    USER("COMUSER");
 
     private String name;
 
