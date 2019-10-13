@@ -1,5 +1,6 @@
 package com.mk.auth.authorization.config;
 
+import com.mk.auth.authorization.custom.AuthUserDetailsService;
 import com.mk.auth.authorization.token.MKTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
@@ -41,8 +43,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     public AuthenticationManager authenticationManager;
 
-    @Qualifier("userDetailsService")
-    UserDetailsService userDetailsService;
+    @Resource(name = "authUserDetailService")
+    AuthUserDetailsService authUserDetailsService;
 
     /**
     *
@@ -98,7 +100,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
 //                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
-                .userDetailsService(userDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
+                .userDetailsService(authUserDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
     }
 
 
