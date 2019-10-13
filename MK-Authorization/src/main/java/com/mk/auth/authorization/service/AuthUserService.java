@@ -32,6 +32,15 @@ public interface AuthUserService
      **/
     List<AuthUser> findAuthUsers();
 
+    /**
+    *
+     * @Author liumingkang
+     * @Description 根据用户名来查找用户信息
+     * @Date 12:53 2019-10-13
+     * @Param [authName]
+     * @return com.mk.auth.authorization.entity.AuthUser
+     **/
+    AuthUser findAuthUser(String authName);
 
 
 }

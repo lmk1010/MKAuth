@@ -1,5 +1,7 @@
 package com.mk.auth.authorization.entity;
 
+import lombok.Data;
+
 /**
  * @Author liumingkang
  * @Date 2019-10-13 01:57

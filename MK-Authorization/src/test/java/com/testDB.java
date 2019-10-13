@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -34,8 +35,15 @@ public class testDB
         authUser.setAuthName("lmk1010");
         authUser.setAuthPass(new BCryptPasswordEncoder().encode("1010"));
 
-        authUserService.createNewAuthUser(authUser.getAuthName(),authUser.getAuthPass(),null);
-
+//        authUserService.createNewAuthUser(authUser.getAuthName(),authUser.getAuthPass(),null);
+//        List<AuthUser> authUsers = authUserService.findAuthUsers();
+//
+//        for (AuthUser authUser1 : authUsers)
+//        {
+//            System.out.println(authUser1.toString());
+//        }
+        AuthUser lmk1010 = authUserService.findAuthUser("lmk1010");
+        System.out.println(lmk1010.toString());
     }
 
 

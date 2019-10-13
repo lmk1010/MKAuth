@@ -5,6 +5,7 @@ import com.mk.auth.authorization.entity.AuthUser;
 import com.mk.auth.authorization.model.UserAuthorityEnum;
 import com.mk.auth.authorization.service.AuthUserService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +57,18 @@ public class AuthUserServiceImpl implements AuthUserService
     @Override
     public List<AuthUser> findAuthUsers()
     {
-        return null;
+        return authUserDao.selectAuthUsers();
+    }
+
+    @Override
+    public AuthUser findAuthUser(String authName)
+    {
+        if (StringUtils.isEmpty(authName))
+        {
+            LOGGER.warn("arguments error! check correct auth name!");
+            return null;
+        }
+        return authUserDao.selectAuthUser(authName);
     }
 
     /**
