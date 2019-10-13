@@ -3,7 +3,7 @@ package com.mk.auth.authorization.entity;
 /**
  * @Author liumingkang
  * @Date 2019-10-13 01:57
- * @Destcription MK系统的授权用户表，仅限于授权和认证
+ * @Destcription MK系统的授权用户表，仅限于授权和认证 web登陆使用
  *
  *
  *
@@ -12,7 +12,7 @@ package com.mk.auth.authorization.entity;
 public class AuthUser
 {
     /** 序列id **/
-    private long id;
+    private int id;
 
     /** 认证名称 实际的登陆名 **/
     private String authName;
@@ -30,12 +30,11 @@ public class AuthUser
     public AuthUser() {
     }
 
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

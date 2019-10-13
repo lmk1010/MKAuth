@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthToken
 {
 
+    private int id;
+
     @JsonProperty("access_token")
     private String accessToken;
 
@@ -31,6 +33,14 @@ public class AuthToken
 
 
     public AuthToken() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAccessToken() {
@@ -79,5 +89,18 @@ public class AuthToken
 
     public void setJti(String jti) {
         this.jti = jti;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthToken{" +
+                "id=" + id +
+                ", accessToken='" + accessToken + '\'' +
+                ", tokenType='" + tokenType + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", expire='" + expire + '\'' +
+                ", scope='" + scope + '\'' +
+                ", jti='" + jti + '\'' +
+                '}';
     }
 }
