@@ -90,17 +90,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
     {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(mkTokenEnhancer(),jwtAccessTokenConverter()));
-
         endpoints.authenticationManager(authenticationManager)  // 放置鉴权管理器
-//                .tokenServices(tokenServices())   //配置自定义的tokenService
-                .tokenStore(generateToken())    // 配置token的store
-                .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-//                .tokenEnhancer(tokenEnhancerChain)   // 添加token的额外的信息
                 .userDetailsService(authUserDetailsService)
-                .setClientDetailsService(authClientDetailsService);   // 必须配置user信息获取服务 目前使用默认生成的user 后期改为DB读取
+                .tokenServices(tokenServices());
     }
 
 
@@ -134,13 +127,26 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
 
-
+    /**
+    *
+     * @Author liumingkang
+     * @Description token的服务类 自定义过期时间 转换器等一些配置
+     * @Date 21:44 2019-10-14
+     * @Param []
+     * @return org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices
+     **/
+    @Primary
     @Bean
     public AuthorizationServerTokenServices tokenServices() {
+
+        // token的增强实现 例如自定义添加的额外信息 和 jwt转换器的支持
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(mkTokenEnhancer(),jwtAccessTokenConverter()));
+
         DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setClientDetailsService(authClientDetailsService);
         defaultTokenServices.setTokenStore(generateToken());
-        defaultTokenServices.setTokenEnhancer(mkTokenEnhancer());
+        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
         defaultTokenServices.setAuthenticationManager(authenticationManager);
         return defaultTokenServices;
     }
