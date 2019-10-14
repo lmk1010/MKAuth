@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -95,6 +94,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(mkTokenEnhancer(),jwtAccessTokenConverter()));
 
         endpoints.authenticationManager(authenticationManager)  // 放置鉴权管理器
+//                .tokenServices(tokenServices())   //配置自定义的tokenService
                 .tokenStore(generateToken())    // 配置token的store
                 .accessTokenConverter(jwtAccessTokenConverter())    // 配置JWT的转换器
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
@@ -107,7 +107,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
     *
      * @Author liumingkang
-     * @Description //TODO JWT生成token
+     * @Description  JWT生成token
      * @Date 11:53 2019-10-03
      * @Param []
      * @return org.springframework.security.oauth2.provider.token.TokenStore
@@ -133,6 +133,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new MKTokenEnhancer();
     }
 
+
+
+    @Bean
+    public AuthorizationServerTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setClientDetailsService(authClientDetailsService);
+        defaultTokenServices.setTokenStore(generateToken());
+        defaultTokenServices.setTokenEnhancer(mkTokenEnhancer());
+        defaultTokenServices.setAuthenticationManager(authenticationManager);
+        return defaultTokenServices;
+    }
 
     /**
     *

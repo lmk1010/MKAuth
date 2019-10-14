@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import sun.misc.Cleaner;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -74,7 +75,8 @@ public class AuthClientDetailsService implements ClientDetailsService
         baseClientDetails.setAuthorizedGrantTypes(authorizedGrantTypes);
         baseClientDetails.setScope(scopeList);
         baseClientDetails.setRegisteredRedirectUri(redirectUrlList);
-
+        baseClientDetails.setAccessTokenValiditySeconds(Integer.parseInt(client.getAccessTokenValiditySeconds()));
+        baseClientDetails.setRefreshTokenValiditySeconds(Integer.parseInt(client.getRefreshTokenValiditySeconds()));
         return baseClientDetails;
     }
 }

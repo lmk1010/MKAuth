@@ -38,18 +38,18 @@ public class testDB
     public void testInsertAuthUser()
     {
         AuthUser authUser = new AuthUser();
-        authUser.setAuthName("lmk1010");
-        authUser.setAuthPass(new BCryptPasswordEncoder().encode("1010"));
+        authUser.setAuthName("lmk2020");
+        authUser.setAuthPass(new BCryptPasswordEncoder().encode("2020"));
 
-//        authUserService.createNewAuthUser(authUser.getAuthName(),authUser.getAuthPass(),null);
+        authUserService.createNewAuthUser(authUser.getAuthName(),authUser.getAuthPass(),"ADMIN");
 //        List<AuthUser> authUsers = authUserService.findAuthUsers();
 //
 //        for (AuthUser authUser1 : authUsers)
 //        {
 //            System.out.println(authUser1.toString());
 //        }
-        AuthUser lmk1010 = authUserService.findAuthUser("lmk1010");
-        System.out.println(lmk1010.toString());
+//        AuthUser lmk1010 = authUserService.findAuthUser("lmk1010");
+//        System.out.println(lmk1010.toString());
     }
 
 

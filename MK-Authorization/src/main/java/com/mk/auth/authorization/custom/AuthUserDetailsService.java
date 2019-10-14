@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +28,8 @@ public class AuthUserDetailsService implements UserDetailsService
 
     @Resource(name = "authUserService")
     AuthUserService authUserService;
+
+    private static final String ROLE_PREFIX = "ROLE_";
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
