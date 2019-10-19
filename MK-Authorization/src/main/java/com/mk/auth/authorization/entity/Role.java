@@ -1,10 +1,24 @@
 package com.mk.auth.authorization.entity;
 
+import lombok.*;
+
 /**
  * @Author liumingkang
  * @Date 2019-10-13 01:57
- * @Destcription TODO
+ * @Destcription 角色
  * @Version 1.0
  **/
-public class Role {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class Role
+{
+    /** 角色ID **/
+    private int id;
+    /** 角色名称 **/
+    private String role_name;
+    /** 角色描述 **/
+    private String role_description;
 }

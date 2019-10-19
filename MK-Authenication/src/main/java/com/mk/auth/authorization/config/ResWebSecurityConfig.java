@@ -23,7 +23,9 @@ public class ResWebSecurityConfig extends WebSecurityConfigurerAdapter
 {
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/**").authorizeRequests()
-                .anyRequest().authenticated();
+        http.requestMatchers().antMatchers("/oauth/**")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/oauth/**").authenticated();
     }
 }
