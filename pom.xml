@@ -8,10 +8,6 @@
     <artifactId>MKAuth</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>MK-Auth-Server</module>
-        <module>MK-Auth-Client</module>
-    </modules>
 
 
 </project>

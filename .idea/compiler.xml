@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="MK-Auth-Server" />
-        <module name="MK-Auth-Client" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="MK-Auth-Client" target="1.7" />
       <module name="MK-Auth-Server" target="1.7" />
