@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MKAuth.iml" filepath="$PROJECT_DIR$/.idea/MKAuth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MK-Auth-Core/mk-auth-core.iml" filepath="$PROJECT_DIR$/MK-Auth-Core/mk-auth-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MK-Auth-IO/mk-auth-io.iml" filepath="$PROJECT_DIR$/MK-Auth-IO/mk-auth-io.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MK-Auth-Manager/mk-auth-manager.iml" filepath="$PROJECT_DIR$/MK-Auth-Manager/mk-auth-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MK-Auth-Oauth/mk-auth-oauth.iml" filepath="$PROJECT_DIR$/MK-Auth-Oauth/mk-auth-oauth.iml" />
     </modules>
   </component>
 </project>

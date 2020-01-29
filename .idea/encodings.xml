@@ -2,6 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/MK-Auth-Client" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MK-Auth-Core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MK-Auth-IO" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MK-Auth-Manager" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MK-Auth-Oauth" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/MK-Auth-Server" charset="UTF-8" />
   </component>
 </project>

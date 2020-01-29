@@ -8,6 +8,12 @@
     <artifactId>MKAuth</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>Mk-Auth-Core</module>
+        <module>MK-Auth-IO</module>
+        <module>MK-Auth-Oauth</module>
+        <module>MK-Auth-Manager</module>
+    </modules>
 
 
 </project>
