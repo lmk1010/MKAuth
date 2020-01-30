@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: MK-Auth-Manager
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1
+        enabled: true
+
+server:
+  port: 18007
+
+logging:
+  level:
+    com.mk.*: debug
+    org:
+      springframework:
+        boot: info
