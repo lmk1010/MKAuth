@@ -1,5 +1,6 @@
 package com.mk.auth.core.config;
 
+import com.mk.auth.core.handler.AuthSuccessHandler;
 import com.mk.auth.core.provider.AuthProvider;
 import com.mk.auth.core.service.custom.AuthUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
 
     @Resource(name = "authProvider")
     private AuthProvider authProvider;
+
+    @Resource(name = "authSuccessHandler")
+    private AuthSuccessHandler authSuccessHandler;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -81,6 +85,7 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
     {
         http.httpBasic().and()
                 .authorizeRequests().anyRequest().authenticated()
+                .and().formLogin().successHandler(authSuccessHandler)
                 .and().csrf().disable();
     }
 

@@ -74,7 +74,6 @@ public class AuthUserDetailsService implements UserDetailsService
             SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
             authorityArrayList.add(simpleGrantedAuthority);
         }
-        // todo 目前只加入这三个属性 其他例如是否过期配置
         User user = new User(authUser.getAuthName(), authUser.getAuthPass(), authorityArrayList);
         return user;
     }
