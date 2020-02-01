@@ -1,6 +1,7 @@
 package com.mk.auth.core.service.custom;
 
 import com.google.common.collect.Lists;
+import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
 import com.mk.auth.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class AuthUserDetailsService implements UserDetailsService
         }
         catch (UsernameNotFoundException e)
         {
-            log.error("Username not found!db is not exist this user! please check your input!");
+            log.error(CommonConstant.LOG_PREFIX + "Username not found!db is not exist this user! please check your input!");
             throw e;
         }
     }

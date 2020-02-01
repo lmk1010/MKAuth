@@ -1,5 +1,8 @@
 package com.mk.auth.core.config;
 
+import com.google.common.collect.Lists;
+import com.mk.auth.core.handler.AccessDeniedExceptionHandler;
+import com.mk.auth.core.handler.AuthEntryPoint;
 import com.mk.auth.core.handler.AuthSuccessHandler;
 import com.mk.auth.core.provider.AuthProvider;
 import com.mk.auth.core.service.custom.AuthUserDetailsService;
@@ -7,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +31,7 @@ import javax.annotation.Resource;
  **/
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
 {
     @Resource(name = "authUserDetailService")
@@ -36,14 +43,18 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
     @Resource(name = "authSuccessHandler")
     private AuthSuccessHandler authSuccessHandler;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    @Resource(name = "accessDeniedExceptionHandler")
+    private AccessDeniedExceptionHandler accessDeniedExceptionHandler;
+
+    @Resource(name = "authEntryPoint")
+    private AuthEntryPoint authEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(authUserDetailsService)
-                .passwordEncoder(encoder);
+        /** 若注入了这两项会自动使用DaoProvider 所以注释掉 采用自定义的provider*/
+//        auth.userDetailsService(authUserDetailsService)
+//                .passwordEncoder(encoder);
         auth.authenticationProvider(authProvider);
     }
 
@@ -86,6 +97,7 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
         http.httpBasic().and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and().formLogin().successHandler(authSuccessHandler)
+                .and().exceptionHandling().accessDeniedHandler(accessDeniedExceptionHandler).authenticationEntryPoint(authEntryPoint)
                 .and().csrf().disable();
     }
 

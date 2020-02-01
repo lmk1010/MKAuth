@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,7 +19,7 @@ import javax.annotation.Resource;
 /**
  * @Author liumingkang
  * @Date 2020-02-01 16:34
- * @Destcription spring secruity实际的鉴权方法 这里进行重写
+ * @Destcription spring secruity鉴权方法 这里进行重写
  * @Version 1.0
  **/
 @Component("authProvider")
@@ -28,7 +27,7 @@ import javax.annotation.Resource;
 public class AuthProvider implements AuthenticationProvider
 {
     @Resource(name = "authUserDetailService")
-    private AuthUserDetailsService authUserDetailsServicel;
+    private AuthUserDetailsService authUserDetailsService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -40,11 +39,11 @@ public class AuthProvider implements AuthenticationProvider
         String password = (String) authentication.getCredentials();
 
         log.info(CommonConstant.LOG_PREFIX + "Start authenticate user......");
-        UserDetails userDetails = authUserDetailsServicel.loadUserByUsername(username);
+        UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
 
         if (!StringUtils.equals(username, userDetails.getUsername()) || !encoder.matches(password, userDetails.getPassword()))
         {
-            log.error("User credentials not correct! please check!");
+            log.error(CommonConstant.LOG_PREFIX + "User credentials not correct! please check!");
             throw new BadCredentialsException("User credentials not correct! please check!");
         }
 

@@ -17,6 +17,7 @@ logging:
   level:
     com.mk.*: debug
     org.springframework.*: info
+    org.springframework.security.*: debug
 
 
 server:
