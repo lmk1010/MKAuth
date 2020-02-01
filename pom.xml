@@ -14,6 +14,7 @@
         <module>MK-Auth-IO</module>
         <module>MK-Auth-Oauth</module>
         <module>MK-Auth-Manager</module>
+        <module>MK-Auth-Common</module>
     </modules>
 
     <properties>
