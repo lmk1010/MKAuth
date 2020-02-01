@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @Destcription 客户端信息的存储表
  * @Version 1.0
  **/
-public class AuthClient implements Serializable
+public class OAuthClient implements Serializable
 {
 
     private static final long serialVersionUID = 4603726207064974964L;
@@ -47,10 +47,10 @@ public class AuthClient implements Serializable
     private String additionalInformation;
 
 
-    public AuthClient() {
+    public OAuthClient() {
     }
 
-    public AuthClient(String clientName, String grandTypes, String authorities, String clientPass, String redirectUrl, String scope, boolean autoApprove, String accessTokenValiditySeconds, String refreshTokenValiditySeconds, String additionalInformation) {
+    public OAuthClient(String clientName, String grandTypes, String authorities, String clientPass, String redirectUrl, String scope, boolean autoApprove, String accessTokenValiditySeconds, String refreshTokenValiditySeconds, String additionalInformation) {
         this.clientName = clientName;
         this.grandTypes = grandTypes;
         this.authorities = authorities;

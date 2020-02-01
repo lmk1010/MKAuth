@@ -4,14 +4,19 @@ import static org.junit.Assert.assertTrue;
 
 import com.mk.auth.core.AuthCoreApplication;
 import com.mk.auth.core.dao.UserDao;
+import com.mk.auth.core.entity.AuthRole;
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.service.RoleService;
 import com.mk.auth.core.service.UserService;
+import org.eclipse.sisu.plexus.Roles;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 /**
  * Unit test for simple App.
@@ -27,6 +32,9 @@ public class AppTest
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private RoleService roleService;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
@@ -41,13 +49,10 @@ public class AppTest
         AuthUser lmk20201 = userService.findUserByName("lmk2020");
         System.out.println(lmk20201);
 
-        AuthUser user = new AuthUser();
+        List<AuthRole> rolesByUser = roleService.findRolesByUser(lmk2020);
 
-        user.setAuthName("lmkbnb2");
-        user.setAuthPass(encoder.encode("1010"));
-        user.setAuthorities("ROLE_ADMIN");
+        rolesByUser.forEach(System.out::println);
 
-        userDao.insert(user);
     }
 
     @Test

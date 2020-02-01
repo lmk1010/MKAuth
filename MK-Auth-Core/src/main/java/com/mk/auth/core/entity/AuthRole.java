@@ -2,6 +2,8 @@ package com.mk.auth.core.entity;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * @Author liumingkang
  * @Date 2019-10-13 01:57
@@ -13,12 +15,12 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class AuthRole
+public class AuthRole implements Serializable
 {
     /** 角色ID **/
     private int id;
     /** 角色名称 **/
-    private String role_name;
+    private String roleName;
     /** 角色描述 **/
-    private String role_description;
+    private String roleDescription;
 }

@@ -3,9 +3,9 @@ package com.mk.auth.core.service.custom;
 import com.google.common.collect.Lists;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.service.RoleService;
 import com.mk.auth.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,9 +26,11 @@ import java.util.ArrayList;
 @Slf4j
 public class AuthUserDetailsService implements UserDetailsService
 {
+    @Resource(name = "roleService")
+    private RoleService roleService;
 
     @Resource(name = "userService")
-    UserService userService;
+    private UserService userService;
 
     private static final String ROLE_PREFIX = "ROLE_";
 
@@ -65,9 +67,8 @@ public class AuthUserDetailsService implements UserDetailsService
     private UserDetails generateUserDetails(AuthUser authUser)
     {
         ArrayList<SimpleGrantedAuthority> authorityArrayList = Lists.newArrayList();
-
-        String authorities = authUser.getAuthorities();
-        String[] roles = StringUtils.split(authorities,",");
+        ArrayList<String> roles = new ArrayList<>();
+        roleService.findRolesByUser(authUser).stream().filter(role -> roles.add(role.getRoleName()));
 
         /** 先使用最简单的权限认证 String role 字符串匹配 **/
         for (String role : roles)

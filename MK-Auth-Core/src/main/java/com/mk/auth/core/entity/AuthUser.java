@@ -1,5 +1,6 @@
 package com.mk.auth.core.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * @Destcription 认证用户实体类
  * @Version 1.0
  **/
-public class AuthUser
+public class AuthUser implements Serializable
 {
     /** 序列id **/
     private int id;
@@ -22,9 +23,6 @@ public class AuthUser
 
     /** user id 用户信息的关联标示**/
     private String memCID;
-
-    /** 该用户所具备的权限 以逗号隔开 **/
-    private String authorities;
 
     /** 账户开启状态 默认开启*/
     private boolean enabled = true;
@@ -51,7 +49,6 @@ public class AuthUser
     {
         this.authName = authName;
         this.authPass = authPass;
-        this.authorities = authorities;
     }
 
     public int getId() {
@@ -84,14 +81,6 @@ public class AuthUser
 
     public void setMemCID(String memCID) {
         this.memCID = memCID;
-    }
-
-    public String getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(String authorities) {
-        this.authorities = authorities;
     }
 
     public boolean isEnabled() {
@@ -149,7 +138,12 @@ public class AuthUser
                 ", authName='" + authName + '\'' +
                 ", authPass='" + authPass + '\'' +
                 ", memCID='" + memCID + '\'' +
-                ", authorities='" + authorities + '\'' +
+                ", enabled=" + enabled +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
                 '}';
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @Repository("userDao")
 public interface UserDao
 {
-    @Insert("insert into mk_auth_user(auth_name,auth_pass,authorities,enabled,credentials_non_expired,account_non_expired,account_non_locked,create_time,update_time) values(#{authUser.authName},#{authUser.authPass},#{authUser.authorities},#{authUser.enabled},#{authUser.credentialsNonExpired},#{authUser.accountNonExpired},#{authUser.accountNonLocked},#{authUser.createTime},#{authUser.updateTime})")
+    @Insert("insert into mk_auth_user(auth_name,auth_pass,enabled,credentials_non_expired,account_non_expired,account_non_locked,create_time,update_time) values(#{authUser.authName},#{authUser.authPass},#{authUser.enabled},#{authUser.credentialsNonExpired},#{authUser.accountNonExpired},#{authUser.accountNonLocked},#{authUser.createTime},#{authUser.updateTime})")
     void insert(@Param("authUser") AuthUser authUser);
 
     @Select("select * from mk_auth_user")

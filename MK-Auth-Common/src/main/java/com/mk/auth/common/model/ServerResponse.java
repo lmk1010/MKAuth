@@ -1,7 +1,6 @@
 package com.mk.auth.common.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mk.auth.common.entity.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
