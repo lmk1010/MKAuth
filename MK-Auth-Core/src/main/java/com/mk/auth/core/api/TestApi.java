@@ -1,5 +1,6 @@
 package com.mk.auth.core.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version 1.0
  **/
 @RestController
+@Slf4j
 public class TestApi
 {
 
@@ -17,5 +19,18 @@ public class TestApi
     public String toHello()
     {
         return "hello man!";
+    }
+
+    @GetMapping("/authcheck")
+    public String checkAuth()
+    {
+        log.info("hello");
+        return "check success!";
+    }
+
+    @GetMapping("/error")
+    public String error()
+    {
+        return "you have no permission!";
     }
 }
