@@ -1,5 +1,8 @@
 package com.mk.auth.core.entity;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 /**
  * @Author liumingkang
  * @Date 2020-02-01 13:38
@@ -23,8 +26,32 @@ public class AuthUser
     /** 该用户所具备的权限 以逗号隔开 **/
     private String authorities;
 
+    /** 账户开启状态 默认开启*/
+    private boolean enabled = true;
+
+    /** 凭证是否过期 默认永不过期*/
+    private boolean credentialsNonExpired = true;
+
+    /** 账户不过期 默认账户永不过期*/
+    private boolean accountNonExpired = true;
+
+    /** 账户不上锁 默认账户无锁*/
+    private boolean accountNonLocked = true;
+
+    /** 创建时间*/
+    private Timestamp createTime = new Timestamp(new Date().getTime());
+
+    /** 更新时间*/
+    private Timestamp updateTime = new Timestamp(new Date().getTime());
 
     public AuthUser() {
+    }
+
+    public AuthUser(String authName, String authPass, String authorities)
+    {
+        this.authName = authName;
+        this.authPass = authPass;
+        this.authorities = authorities;
     }
 
     public int getId() {
@@ -67,6 +94,53 @@ public class AuthUser
         this.authorities = authorities;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
 
     @Override
     public String toString() {

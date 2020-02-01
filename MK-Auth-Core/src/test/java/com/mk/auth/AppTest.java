@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -26,6 +27,8 @@ public class AppTest
     @Autowired
     private UserDao userDao;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 
     /**
      * Rigorous Test :-)
@@ -37,5 +40,22 @@ public class AppTest
         System.out.println(lmk2020);
         AuthUser lmk20201 = userService.findUserByName("lmk2020");
         System.out.println(lmk20201);
+
+        AuthUser user = new AuthUser();
+
+        user.setAuthName("lmkbnb2");
+        user.setAuthPass(encoder.encode("1010"));
+        user.setAuthorities("ROLE_ADMIN");
+
+        userDao.insert(user);
+    }
+
+    @Test
+    public void tesq()
+    {
+        String encode = encoder.encode("1010");
+
+        System.out.println(encode);
+        System.out.println(encoder.matches("1010", "$2a$10$WdY7MGrlLKbMoPGbYHg8pO4EKfKSLKvjwVRk4K2ENJfCoQBSmnQp6"));
     }
 }
