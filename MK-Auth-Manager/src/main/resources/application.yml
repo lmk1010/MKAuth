@@ -1,6 +1,6 @@
 spring:
   application:
-    name: MK-Auth-Manager
+    name: MK-Manager
   cloud:
     nacos:
       discovery:
