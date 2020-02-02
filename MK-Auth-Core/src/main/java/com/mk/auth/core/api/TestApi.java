@@ -1,5 +1,7 @@
 package com.mk.auth.core.api;
 
+import com.mk.auth.common.constant.ErrorCodeContant;
+import com.mk.auth.common.utils.errorcode.ErrorCodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,12 @@ public class TestApi
     {
         log.info("hello");
         return "check success!";
+    }
+
+    @GetMapping("/testerror")
+    public String toerrorcode()
+    {
+        return ErrorCodeUtil.translateInfo(ErrorCodeContant.COMMON_ERROR).toString();
     }
 
     @GetMapping("/error")

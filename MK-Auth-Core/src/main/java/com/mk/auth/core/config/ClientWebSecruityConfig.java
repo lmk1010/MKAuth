@@ -98,9 +98,5 @@ public class ClientWebSecruityConfig extends WebSecurityConfigurerAdapter
                 .and().csrf().disable();
     }
 
-    @Bean
-    public BCryptPasswordEncoder getEncoder()
-    {
-        return new BCryptPasswordEncoder();
-    }
+
 }

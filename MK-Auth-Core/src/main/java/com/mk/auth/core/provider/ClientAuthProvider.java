@@ -29,8 +29,7 @@ public class ClientAuthProvider implements AuthenticationProvider
     @Resource(name = "clientAuthUserDetailsService")
     private ClientAuthUserDetailsService clientAuthUserDetailsService;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException

@@ -5,6 +5,7 @@ import com.mk.auth.common.constant.ErrorCodeContant;
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * @Author liumingkang
@@ -14,6 +15,15 @@ import org.apache.commons.lang3.StringUtils;
  **/
 public class ErrorCodeUtil
 {
+
+    static
+    {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/mk");
+        dataSource.setUsername("root");
+        dataSource.setPassword("lmk951010");
+    }
     
     /**
     *

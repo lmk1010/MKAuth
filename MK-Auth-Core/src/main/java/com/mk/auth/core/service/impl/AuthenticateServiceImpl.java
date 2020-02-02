@@ -27,14 +27,10 @@ import javax.annotation.Resource;
 @Slf4j
 public class AuthenticateServiceImpl implements AuthenticateService
 {
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Resource(name = "userService")
     private UserService userService;
-
-    @Resource(name = "roleService")
-    private RoleService roleService;
 
     @Override
     public boolean authenticate(AuthUser user)
