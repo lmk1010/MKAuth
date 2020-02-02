@@ -30,20 +30,12 @@ public class AuthenticationApi
     private ClientAuthProvider clientAuthProvider;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ServerResponse toLogin(@RequestParam("username") String username,@RequestParam("password") String password)
+    public ServerResponse toLogin(@RequestParam("username") String username, @RequestParam("password") String password)
     {
-        // TODO: 2020-02-02 首次登陆逻辑
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        try
-        {
-            Authentication authenticate = clientAuthProvider.authenticate(token);
-            return ServerResponse.createBySuccess(authenticate, 200, "login success!");
-        }
-        catch (Exception e)
-        {
-            log.error(CommonConstant.LOG_PREFIX + "login failed! details:{}", e.getMessage());
-            return ServerResponse.createBySuccess("login failed! please check your password");
-        }
+
+        // TODO: 2020-02-02
+
+       return ServerResponse.createBySuccess();
     }
 
 
