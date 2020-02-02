@@ -19,9 +19,9 @@ import java.io.PrintWriter;
  * @Destcription 此异常处理 仅限于对于已经认证成功 但是无权限的访问才会handle
  * @Version 1.0
  **/
-@Component("accessDeniedExceptionHandler")
+@Component("clientAccessDeniedExceptionHandler")
 @Slf4j
-public class AccessDeniedExceptionHandler implements AccessDeniedHandler
+public class ClientAccessDeniedExceptionHandler implements AccessDeniedHandler
 {
 
     @Override

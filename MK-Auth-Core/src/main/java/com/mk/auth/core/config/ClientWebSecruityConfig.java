@@ -1,10 +1,10 @@
 package com.mk.auth.core.config;
 
-import com.mk.auth.core.handler.AccessDeniedExceptionHandler;
-import com.mk.auth.core.handler.AuthEntryPoint;
-import com.mk.auth.core.handler.AuthSuccessHandler;
-import com.mk.auth.core.provider.AuthProvider;
-import com.mk.auth.core.service.custom.AuthUserDetailsService;
+import com.mk.auth.core.handler.ClientAccessDeniedExceptionHandler;
+import com.mk.auth.core.handler.ClientAuthEntryPoint;
+import com.mk.auth.core.handler.ClientAuthSuccessHandler;
+import com.mk.auth.core.provider.ClientAuthProvider;
+import com.mk.auth.core.service.custom.ClientAuthUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,22 +28,22 @@ import javax.annotation.Resource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
+public class ClientWebSecruityConfig extends WebSecurityConfigurerAdapter
 {
-    @Resource(name = "authUserDetailService")
-    private AuthUserDetailsService authUserDetailsService;
+    @Resource(name = "clientAuthUserDetailsService")
+    private ClientAuthUserDetailsService clientAuthUserDetailsService;
 
-    @Resource(name = "authProvider")
-    private AuthProvider authProvider;
+    @Resource(name = "clientAuthProvider")
+    private ClientAuthProvider clientAuthProvider;
 
-    @Resource(name = "authSuccessHandler")
-    private AuthSuccessHandler authSuccessHandler;
+    @Resource(name = "clientAuthSuccessHandler")
+    private ClientAuthSuccessHandler clientAuthSuccessHandler;
 
-    @Resource(name = "accessDeniedExceptionHandler")
-    private AccessDeniedExceptionHandler accessDeniedExceptionHandler;
+    @Resource(name = "clientAccessDeniedExceptionHandler")
+    private ClientAccessDeniedExceptionHandler clientAccessDeniedExceptionHandler;
 
-    @Resource(name = "authEntryPoint")
-    private AuthEntryPoint authEntryPoint;
+    @Resource(name = "clientAuthEntryPoint")
+    private ClientAuthEntryPoint clientAuthEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
@@ -51,13 +51,13 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
         /** 若注入了这两项会自动使用DaoProvider 所以注释掉 采用自定义的provider*/
 //        auth.userDetailsService(authUserDetailsService)
 //                .passwordEncoder(encoder);
-        auth.authenticationProvider(authProvider);
+        auth.authenticationProvider(clientAuthProvider);
     }
 
     @Override
     public UserDetailsService userDetailsServiceBean()
     {
-        return authUserDetailsService;
+        return clientAuthUserDetailsService;
     }
 
     @Bean("authenticationManager")
@@ -70,7 +70,7 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected UserDetailsService userDetailsService()
     {
-        return authUserDetailsService;
+        return clientAuthUserDetailsService;
     }
 
     @Override
@@ -93,8 +93,8 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
         http.httpBasic().and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
-                .and().formLogin().successHandler(authSuccessHandler)
-                .and().exceptionHandling().accessDeniedHandler(accessDeniedExceptionHandler).authenticationEntryPoint(authEntryPoint)
+                .and().formLogin().successHandler(clientAuthSuccessHandler)
+                .and().exceptionHandling().accessDeniedHandler(clientAccessDeniedExceptionHandler).authenticationEntryPoint(clientAuthEntryPoint)
                 .and().csrf().disable();
     }
 

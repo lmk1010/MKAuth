@@ -1,7 +1,7 @@
 package com.mk.auth.core.provider;
 
 import com.mk.auth.core.constant.CommonConstant;
-import com.mk.auth.core.service.custom.AuthUserDetailsService;
+import com.mk.auth.core.service.custom.ClientAuthUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import javax.annotation.Resource;
  * @Destcription 客户端鉴权方法 这里进行重写
  * @Version 1.0
  **/
-@Component("authProvider")
+@Component("clientAuthProvider")
 @Slf4j
-public class AuthProvider implements AuthenticationProvider
+public class ClientAuthProvider implements AuthenticationProvider
 {
-    @Resource(name = "authUserDetailService")
-    private AuthUserDetailsService authUserDetailsService;
+    @Resource(name = "clientAuthUserDetailsService")
+    private ClientAuthUserDetailsService clientAuthUserDetailsService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -39,7 +39,7 @@ public class AuthProvider implements AuthenticationProvider
         String password = (String) authentication.getCredentials();
 
         log.info(CommonConstant.LOG_PREFIX + "Start authenticate user......");
-        UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = clientAuthUserDetailsService.loadUserByUsername(username);
 
         if (!StringUtils.equals(username, userDetails.getUsername()) || !encoder.matches(password, userDetails.getPassword()))
         {

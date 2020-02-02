@@ -21,9 +21,9 @@ import java.io.IOException;
  * @Destcription 认证端点程序 用于未登陆、未认证成功之后的异常捕获处理
  * @Version 1.0
  **/
-@Component("authEntryPoint")
+@Component("clientAuthEntryPoint")
 @Slf4j
-public class AuthEntryPoint implements AuthenticationEntryPoint
+public class ClientAuthEntryPoint implements AuthenticationEntryPoint
 {
     /**
      * @Description 处理返回的实现方法

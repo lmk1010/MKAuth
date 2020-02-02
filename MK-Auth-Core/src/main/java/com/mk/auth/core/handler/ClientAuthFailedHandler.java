@@ -6,7 +6,7 @@ package com.mk.auth.core.handler;
  * @Destcription 认证失败的处理handler 仅用于表单登陆
  * @Version 1.0
  **/
-public class AuthFailedHandler
+public class ClientAuthFailedHandler
 {
 
 }

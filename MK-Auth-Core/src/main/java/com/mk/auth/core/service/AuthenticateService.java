@@ -10,6 +10,12 @@ import com.mk.auth.core.entity.AuthUser;
  **/
 public interface AuthenticateService
 {
+    /**
+     * @Description 实际认证鉴权方法
+     * @Date 12:35 2020-02-02
+     * @Param [user]
+     * @return int 1为成功 0为失败
+     **/
     public int authenticate(AuthUser user);
 
 }

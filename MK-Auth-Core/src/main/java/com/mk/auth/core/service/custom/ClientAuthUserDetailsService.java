@@ -25,9 +25,9 @@ import java.util.ArrayList;
  * @Destcription 自定义认证用户的加载方式 默认mybatis从数据库加载
  * @Version 1.0
  **/
-@Service("authUserDetailService")
+@Service("clientAuthUserDetailsService")
 @Slf4j
-public class AuthUserDetailsService implements UserDetailsService
+public class ClientAuthUserDetailsService implements UserDetailsService
 {
     @Resource(name = "clientService")
     private ClientService clientService;

@@ -2,7 +2,7 @@ package com.mk.auth.core.api;
 
 import com.mk.auth.common.model.ServerResponse;
 import com.mk.auth.core.constant.CommonConstant;
-import com.mk.auth.core.provider.AuthProvider;
+import com.mk.auth.core.provider.ClientAuthProvider;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AuthenticationApi
 {
 
     @Autowired
-    private AuthProvider authProvider;
+    private ClientAuthProvider clientAuthProvider;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ServerResponse toLogin(@RequestParam("username") String username,@RequestParam("password") String password)
@@ -36,7 +36,7 @@ public class AuthenticationApi
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         try
         {
-            Authentication authenticate = authProvider.authenticate(token);
+            Authentication authenticate = clientAuthProvider.authenticate(token);
             return ServerResponse.createBySuccess(authenticate, 200, "login success!");
         }
         catch (Exception e)

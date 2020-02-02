@@ -18,9 +18,9 @@ import java.io.IOException;
  * @Destcription 认证成功之后的处理逻辑 仅用于表单登陆方式
  * @Version 1.0
  **/
-@Component("authSuccessHandler")
+@Component("clientAuthSuccessHandler")
 @Slf4j
-public class AuthSuccessHandler implements AuthenticationSuccessHandler
+public class ClientAuthSuccessHandler implements AuthenticationSuccessHandler
 {
 
     @Override
