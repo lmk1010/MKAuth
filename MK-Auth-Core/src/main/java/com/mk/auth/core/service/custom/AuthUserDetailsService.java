@@ -2,10 +2,13 @@ package com.mk.auth.core.service.custom;
 
 import com.google.common.collect.Lists;
 import com.mk.auth.core.constant.CommonConstant;
+import com.mk.auth.core.entity.AuthClient;
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.service.ClientService;
 import com.mk.auth.core.service.RoleService;
 import com.mk.auth.core.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,27 +29,24 @@ import java.util.ArrayList;
 @Slf4j
 public class AuthUserDetailsService implements UserDetailsService
 {
-    @Resource(name = "roleService")
-    private RoleService roleService;
-
-    @Resource(name = "userService")
-    private UserService userService;
+    @Resource(name = "clientService")
+    private ClientService clientService;
 
     private static final String ROLE_PREFIX = "ROLE_";
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    public UserDetails loadUserByUsername(String clientName) throws UsernameNotFoundException
     {
         try
         {
             /** 加载用户名密码 **/
-            AuthUser authUser = userService.findUserByName(username);
-            if (null == authUser)
+            AuthClient authClient = clientService.findByName(clientName);
+            if (null == authClient)
             {
                 throw new UsernameNotFoundException("no user!");
             }
             /** 返回userDetails **/
-            return generateUserDetails(authUser);
+            return generateUserDetails(authClient);
         }
         catch (UsernameNotFoundException e)
         {
@@ -64,19 +64,20 @@ public class AuthUserDetailsService implements UserDetailsService
      * @Param [authUser]
      * @return org.springframework.security.core.userdetails.UserDetails
      **/
-    private UserDetails generateUserDetails(AuthUser authUser)
+    private UserDetails generateUserDetails(AuthClient authClient)
     {
         ArrayList<SimpleGrantedAuthority> authorityArrayList = Lists.newArrayList();
-        ArrayList<String> roles = new ArrayList<>();
-        roleService.findRolesByUser(authUser).stream().filter(role -> roles.add(role.getRoleName()));
+
+        String[] roles = StringUtils.split(authClient.getClientAuthorities(), ",");
 
         /** 先使用最简单的权限认证 String role 字符串匹配 **/
         for (String role : roles)
         {
-            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
+            /** 这里要加上ROLE_前缀 spring secruity才能识别*/
+            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(ROLE_PREFIX + role);
             authorityArrayList.add(simpleGrantedAuthority);
         }
-        User user = new User(authUser.getAuthName(), authUser.getAuthPass(), authorityArrayList);
+        User user = new User(authClient.getClientName(), authClient.getClientPass(), authorityArrayList);
         return user;
     }
 }

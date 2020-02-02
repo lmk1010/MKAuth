@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * @Author liumingkang
  * @Date 2020-02-01 16:31
- * @Destcription 认证成功之后的处理逻辑
+ * @Destcription 认证成功之后的处理逻辑 仅用于表单登陆方式
  * @Version 1.0
  **/
 @Component("authSuccessHandler")

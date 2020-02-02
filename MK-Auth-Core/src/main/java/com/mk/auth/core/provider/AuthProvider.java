@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 /**
  * @Author liumingkang
  * @Date 2020-02-01 16:34
- * @Destcription spring secruity鉴权方法 这里进行重写
+ * @Destcription 客户端鉴权方法 这里进行重写
  * @Version 1.0
  **/
 @Component("authProvider")

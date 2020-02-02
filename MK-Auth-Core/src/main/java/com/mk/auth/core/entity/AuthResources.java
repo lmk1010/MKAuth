@@ -19,18 +19,21 @@ public class AuthResources
     private int id;
 
     /** 资源名称 **/
-    private String resource_name;
+    private String resourceName;
 
     /** 资源URl **/
-    private String resource_url;
+    private String resourceUrl;
 
     /** 资源方法 **/
-    private String resource_method;
+    private String resourceMethod;
 
     /** 资源类型 **/
-    private String resource_type;
+    private String resourceType;
+
+    /** 资源属客户端 **/
+    private String resourceClient;
 
     /** 资源描述 **/
-    private String resource_description;
+    private String resourceDescription;
 
 }

@@ -4,8 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import com.mk.auth.core.AuthCoreApplication;
 import com.mk.auth.core.dao.UserDao;
+import com.mk.auth.core.entity.AuthClient;
 import com.mk.auth.core.entity.AuthRole;
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.service.ClientService;
 import com.mk.auth.core.service.RoleService;
 import com.mk.auth.core.service.UserService;
 import org.eclipse.sisu.plexus.Roles;
@@ -35,6 +37,9 @@ public class AppTest
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private ClientService clientService;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
@@ -53,6 +58,13 @@ public class AppTest
 
         rolesByUser.forEach(System.out::println);
 
+    }
+
+    @Test
+    public void testinsert()
+    {
+        AuthClient mkGatway = clientService.findByName("MKGatway");
+        System.out.println(mkGatway.toString());
     }
 
     @Test

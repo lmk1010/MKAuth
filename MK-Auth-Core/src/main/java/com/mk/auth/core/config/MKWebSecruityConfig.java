@@ -1,17 +1,13 @@
 package com.mk.auth.core.config;
 
-import com.google.common.collect.Lists;
 import com.mk.auth.core.handler.AccessDeniedExceptionHandler;
 import com.mk.auth.core.handler.AuthEntryPoint;
 import com.mk.auth.core.handler.AuthSuccessHandler;
 import com.mk.auth.core.provider.AuthProvider;
 import com.mk.auth.core.service.custom.AuthUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -86,7 +82,7 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
     /**
      *
      * @Author liumingkang
-     * @Description 配置访问拦截url 所有的api都要认证之后才可以使用
+     * @Description 配置访问拦截url 所有的授权请求API都要认证之后才可以使用
      * @Date 15:22 2020-02-01
      * @Param [http]
      * @return void
@@ -95,7 +91,8 @@ public class MKWebSecruityConfig extends WebSecurityConfigurerAdapter
     protected void configure(HttpSecurity http) throws Exception
     {
         http.httpBasic().and()
-                .authorizeRequests().anyRequest().authenticated()
+                .authorizeRequests()
+                .anyRequest().authenticated()
                 .and().formLogin().successHandler(authSuccessHandler)
                 .and().exceptionHandling().accessDeniedHandler(accessDeniedExceptionHandler).authenticationEntryPoint(authEntryPoint)
                 .and().csrf().disable();

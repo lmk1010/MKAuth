@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @Author liumingkang
  * @Date 2020-02-01 21:36
- * @Destcription 用于未登陆、未认证成功之后的异常捕获处理
+ * @Destcription 认证端点程序 用于未登陆、未认证成功之后的异常捕获处理
  * @Version 1.0
  **/
 @Component("authEntryPoint")
