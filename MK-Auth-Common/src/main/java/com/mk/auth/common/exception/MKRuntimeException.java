@@ -33,6 +33,11 @@ public class MKRuntimeException extends RuntimeException
         this.errorCode = errorCode;
     }
 
+    public MKRuntimeException(String message, ErrorCode errorCode) {
+        this.message = message;
+        this.errorCode = errorCode;
+    }
+
     @Override
     public String getMessage()
     {

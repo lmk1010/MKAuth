@@ -45,7 +45,7 @@ public class AuthUser implements Serializable
     public AuthUser() {
     }
 
-    public AuthUser(String authName, String authPass, String authorities)
+    public AuthUser(String authName, String authPass)
     {
         this.authName = authName;
         this.authPass = authPass;

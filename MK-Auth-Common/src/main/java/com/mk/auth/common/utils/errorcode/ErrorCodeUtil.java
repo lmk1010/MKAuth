@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mk.auth.common.constant.ErrorCodeContant;
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Author liumingkang
@@ -11,7 +12,8 @@ import com.mk.auth.common.exception.MKException;
  * @Destcription TODO 错误码工具类
  * @Version 1.0
  **/
-public class ErrorCodeUtil {
+public class ErrorCodeUtil
+{
     
     /**
     *
@@ -21,7 +23,7 @@ public class ErrorCodeUtil {
      * @Param [ex]
      * @return com.mk.cloudcommon.entity.ErrorCode
      **/
-    public static ErrorCode tanslateInfo(Throwable ex)
+    public static ErrorCode translateInfo(Throwable ex)
     {
         return null;
     }
@@ -34,9 +36,9 @@ public class ErrorCodeUtil {
      * @Param [code]
      * @return com.mk.cloudcommon.entity.ErrorCode
      **/
-    public static ErrorCode tanslateInfo(String code)
+    public static ErrorCode translateInfo(String code)
     {
-        return tanslate(code, ErrorCodeContant.CHINESE);
+        return translate(code, ErrorCodeContant.CHINESE);
     }
 
     /**
@@ -47,7 +49,7 @@ public class ErrorCodeUtil {
      * @Param [code, local]
      * @return com.mk.cloudcommon.entity.ErrorCode
      **/
-    public static ErrorCode tanslate(String code,String local)
+    public static ErrorCode translate(String code,String local)
     {
         if (null == local)
         {
@@ -93,11 +95,12 @@ public class ErrorCodeUtil {
         {
             /** 如果是MKException 获取的是内部的code */
             MKException mke = (MKException) e;
-            code = mke.getCode();
+            if (!StringUtils.isBlank(code))
+            {
+                code = mke.getCode();
+            }
         }
-        errorCode = tanslateInfo(code);;
-        /** 如果获取的是普通的Exception 则转换为通用错误码 且错误信息附带异常报错信息 */
-        ErrorCode causedBy = causedByLoop(errorCode,e);
+        errorCode = translateInfo(code);;
 
         return errorCode;
     }

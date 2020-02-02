@@ -1,7 +1,13 @@
 package com.mk.auth.core.api;
 
+import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.model.ServerResponse;
+import com.mk.auth.core.constant.CommonConstant;
+import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.model.MKToken;
 import com.mk.auth.core.provider.ClientAuthProvider;
+import com.mk.auth.core.service.AuthenticateService;
+import com.mk.auth.core.util.TokenUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @Author liumingkang
@@ -23,16 +31,40 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationApi
 {
 
-    @Autowired
-    private ClientAuthProvider clientAuthProvider;
+    @Resource(name = "authenticateService")
+    private AuthenticateService authenticateService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ServerResponse toLogin(@RequestParam("username") String username, @RequestParam("password") String password)
+    @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
+    public ServerResponse toGetAccessToken(@RequestParam("username") String username, @RequestParam("password") String password)
     {
+        try
+        {
+            if (authenticateService.authenticate(new AuthUser(username, password)))
+            {
+                log.info(CommonConstant.LOG_PREFIX + "User auth success....");
+                MKToken mkToken = new MKToken();
+                TokenUtils.initToken(mkToken, TokenUtils.WEB_TOKEN);
+                // TODO: 2020-02-02 存入redis
 
-        // TODO: 2020-02-02
+                return ServerResponse.createBySuccess(mkToken);
+            }
+        }
+        catch (MKRuntimeException e)
+        {
+
+        }
+        catch (Exception e)
+        {
+
+        }
 
        return ServerResponse.createBySuccess();
+    }
+
+    @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
+    public ServerResponse toCheckToken()
+    {
+        return ServerResponse.createBySuccess();
     }
 
 
