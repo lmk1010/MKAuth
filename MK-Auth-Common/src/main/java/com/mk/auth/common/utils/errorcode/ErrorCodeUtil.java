@@ -15,15 +15,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  **/
 public class ErrorCodeUtil
 {
-
-    static
-    {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/mk");
-        dataSource.setUsername("root");
-        dataSource.setPassword("lmk951010");
-    }
     
     /**
     *
