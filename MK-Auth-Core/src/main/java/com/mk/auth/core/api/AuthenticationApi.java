@@ -5,16 +5,12 @@ import com.mk.auth.common.model.ServerResponse;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
 import com.mk.auth.core.model.MKToken;
-import com.mk.auth.core.provider.ClientAuthProvider;
 import com.mk.auth.core.service.AuthenticateService;
 import com.mk.auth.core.util.TokenUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -27,7 +23,7 @@ import javax.annotation.Resource;
 @RestController
 @Slf4j
 @Api("MK鉴权API")
-@RequestMapping("/authentication")
+@RequestMapping("/authenticate")
 public class AuthenticationApi
 {
 
@@ -66,6 +62,7 @@ public class AuthenticationApi
     {
         return ServerResponse.createBySuccess();
     }
+
 
 
 }

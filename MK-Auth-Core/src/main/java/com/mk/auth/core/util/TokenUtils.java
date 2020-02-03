@@ -1,19 +1,13 @@
 package com.mk.auth.core.util;
 
-import com.alibaba.nacos.common.util.Md5Utils;
 import com.mk.auth.common.exception.MKRuntimeException;
-import com.mk.auth.common.utils.secrutiy.MD5Utils;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.model.MKToken;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.provider.MD5;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -53,7 +47,7 @@ public class TokenUtils
             log.error(CommonConstant.LOG_PREFIX + "Illega argument!");
             throw new MKRuntimeException("Illega argument!");
         }
-        if (!Arrays.stream(tokenArray).findFirst().equals(tokenType))
+        if (Arrays.stream(tokenArray).noneMatch(type -> StringUtils.equals(tokenType,type)))
         {
             log.error(CommonConstant.LOG_PREFIX + "Token type is error!");
             throw new MKRuntimeException("Token type is error! your type is:" + tokenType);

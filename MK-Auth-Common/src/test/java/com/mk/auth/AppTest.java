@@ -2,7 +2,11 @@ package com.mk.auth;
 
 import static org.junit.Assert.assertTrue;
 
+import com.mk.auth.common.utils.mysql.JdbcUtils;
 import org.junit.Test;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Unit test for simple App.
@@ -15,6 +19,15 @@ public class AppTest
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+
+        try
+        {
+            Connection connection = JdbcUtils.getConnection();
+            System.out.println(connection.getClientInfo().toString());
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

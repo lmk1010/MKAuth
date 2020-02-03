@@ -8,5 +8,6 @@ package com.mk.auth.core.service;
  **/
 public interface TokenService
 {
+    boolean checkAccessToken(String accessToken);
 
 }

@@ -3,7 +3,6 @@ package com.mk.auth.core.service.impl;
 import com.mk.auth.core.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author liumingkang
@@ -16,4 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class TokenServiceImpl implements TokenService
 {
 
+    @Override
+    public boolean checkAccessToken(String accessToken)
+    {
+        return false;
+    }
 }
