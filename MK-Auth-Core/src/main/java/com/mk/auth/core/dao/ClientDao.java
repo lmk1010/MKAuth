@@ -35,4 +35,8 @@ public interface ClientDao
     @Select("select * from mk_auth_client where client_name = #{clientName}")
     @ResultMap("resultMap")
     AuthClient selectByName(@Param("clientName") String clientName);
+
+    @Select("select * from mk_auth_client where client_key = #{clientKey}")
+    @ResultMap("resultMap")
+    AuthClient selectByKey(@Param("clientKey") String clientKey);
 }

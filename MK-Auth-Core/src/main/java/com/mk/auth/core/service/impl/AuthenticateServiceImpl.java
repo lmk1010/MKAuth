@@ -33,7 +33,7 @@ public class AuthenticateServiceImpl implements AuthenticateService
     private UserService userService;
 
     @Override
-    public boolean authenticate(AuthUser user)
+    public AuthUser authenticate(AuthUser user)
     {
         if(null == user)
         {
@@ -52,6 +52,6 @@ public class AuthenticateServiceImpl implements AuthenticateService
             log.error(CommonConstant.LOG_PREFIX + "User authenicate failed! password or username is not correct!");
             throw new MKRuntimeException("User authenicate failed! password or username is not correct!");
         }
-        return true;
+        return realUser;
     }
 }

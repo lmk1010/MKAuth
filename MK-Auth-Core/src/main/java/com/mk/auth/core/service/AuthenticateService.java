@@ -16,6 +16,6 @@ public interface AuthenticateService
      * @Param [user]
      * @return int 1为成功 0为失败
      **/
-    public boolean authenticate(AuthUser user);
+    public AuthUser authenticate(AuthUser user);
 
 }

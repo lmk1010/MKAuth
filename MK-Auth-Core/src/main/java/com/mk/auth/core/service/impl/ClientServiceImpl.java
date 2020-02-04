@@ -39,6 +39,12 @@ public class ClientServiceImpl implements ClientService
     }
 
     @Override
+    public AuthClient findByKey(String clientKey)
+    {
+        return clientDao.selectByKey(clientKey);
+    }
+
+    @Override
     public List<AuthClient> findAll()
     {
         return clientDao.selectAll();

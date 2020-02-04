@@ -131,6 +131,11 @@ public class AuthUser implements Serializable
         this.updateTime = updateTime;
     }
 
+    public void clearPass()
+    {
+        this.authPass = null;
+    }
+
     @Override
     public String toString() {
         return "AuthUser{" +

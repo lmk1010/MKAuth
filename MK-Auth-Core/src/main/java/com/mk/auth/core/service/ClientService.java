@@ -14,6 +14,8 @@ public interface ClientService
 {
     AuthClient findByName(String clientName);
 
+    AuthClient findByKey(String clientKey);
+
     List<AuthClient> findAll();
 
     void insert(AuthClient authClient);

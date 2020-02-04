@@ -11,6 +11,18 @@ spring:
       discovery:
         enabled: true
         server-addr: 127.0.0.1
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 3
+        max-wait: -1
+        min-idle: 0
+    timeout: 30000
 
 
 logging:
