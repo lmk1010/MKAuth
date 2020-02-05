@@ -16,11 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -79,7 +82,10 @@ public class AuthenticationApi
             /** 存入redis */
             authenticate.clearPass();
             redisTemplate.opsForValue().set(mkToken.getAccessToken(), JSON.toJSONString(authenticate));
-            redisTemplate.expire(mkToken.getAccessToken(), AuthConstant.TIME_USER_EXPIRED, TimeUnit.MINUTES);
+            redisTemplate.expire(mkToken.getAccessToken(), mkToken.getExpire(), TimeUnit.MINUTES);
+
+            redisTemplate.opsForValue().set(mkToken.getRefreshToken(), JSON.toJSONString(mkToken.getAccessToken()));
+            redisTemplate.expire(mkToken.getRefreshToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
             return ServerResponse.createBySuccess(mkToken, "Auth success!");
         }
         catch (MKRuntimeException e)
@@ -92,11 +98,41 @@ public class AuthenticationApi
         }
     }
 
-    @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
-    public ServerResponse toCheckToken()
+    @RequestMapping(value = "/refreshAccessToken", method = RequestMethod.POST)
+    public ServerResponse toRefreshAccessToken(@RequestParam("refresh_token") String refreshToken)
     {
         return ServerResponse.createBySuccess();
     }
+
+    @RequestMapping(value = "/clearToken", method = RequestMethod.POST)
+    public ServerResponse toClearToken()
+    {
+        return ServerResponse.createBySuccess();
+    }
+
+    /** gatway每次做转发router的时候 都会调用此接口 做认证 */
+    @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
+    public ServerResponse toCheckToken(@RequestParam("access_token") String accessToken)
+    {
+        if(StringUtils.isBlank(accessToken))
+        {
+            return ServerResponse.createByError("AccessToken is empty!");
+        }
+        if (!TokenUtils.isMKToken(accessToken))
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "Error accessToken type!");
+            return ServerResponse.createByError("Error accessToken type!");
+        }
+        Boolean res = redisTemplate.hasKey(accessToken);
+        if (!res)
+        {
+            return ServerResponse.createByError("AccessToken is invaild!");
+        }
+
+        return ServerResponse.createBySuccess(res, "AccessToken is vaild!");
+    }
+
+
 
 
 

@@ -9,5 +9,7 @@ package com.mk.auth.core.constant;
 public interface AuthConstant
 {
     /** 用户过期时间 15min 单位分钟*/
-    long TIME_USER_EXPIRED = 15L;
+    long ACCESS_TOKEN_EXPIRE = 15L;
+
+    long REFRESH_TOKEN_EXPIRE = 30L;
 }

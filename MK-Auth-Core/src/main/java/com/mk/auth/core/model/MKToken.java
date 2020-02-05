@@ -1,6 +1,7 @@
 package com.mk.auth.core.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.mk.auth.core.constant.AuthConstant;
 import lombok.*;
 
 import java.io.Serializable;
@@ -28,6 +29,6 @@ public class MKToken implements Serializable
     private String refreshToken;
 
     @JSONField(name = "expire_in")
-    private long expire;
+    private long expire = AuthConstant.ACCESS_TOKEN_EXPIRE;
 
 }
