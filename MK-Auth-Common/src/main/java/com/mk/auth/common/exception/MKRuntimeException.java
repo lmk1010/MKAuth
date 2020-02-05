@@ -3,6 +3,8 @@ package com.mk.auth.common.exception;
 
 import com.mk.auth.common.entity.ErrorCode;
 
+import java.util.Arrays;
+
 /**
  * @Author liumingkang
  * @Date 2020-01-25 09:49
@@ -11,8 +13,9 @@ import com.mk.auth.common.entity.ErrorCode;
  **/
 public class MKRuntimeException extends RuntimeException
 {
+    private String code;
 
-    private String message;
+    private String[] args;
 
     private Throwable cause;
 
@@ -23,30 +26,15 @@ public class MKRuntimeException extends RuntimeException
 
     }
 
-    public MKRuntimeException(String message)
-    {
-        this.message = message;
+
+    public MKRuntimeException(String code, String[] args) {
+        this.code = code;
+        this.args = args;
     }
 
-    public MKRuntimeException(ErrorCode errorCode)
+    public MKRuntimeException(String code)
     {
-        this.errorCode = errorCode;
-    }
-
-    public MKRuntimeException(String message, ErrorCode errorCode) {
-        this.message = message;
-        this.errorCode = errorCode;
-    }
-
-    @Override
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage(String message)
-    {
-        this.message = message;
+        this.code = code;
     }
 
     @Override
@@ -70,12 +58,27 @@ public class MKRuntimeException extends RuntimeException
         this.errorCode = errorCode;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String[] getArgs() {
+        return args;
+    }
+
+    public void setArgs(String[] args) {
+        this.args = args;
+    }
+
     @Override
-    public String toString()
-    {
-        // TODO: 2020-01-25 需要errorcode翻译
+    public String toString() {
         return "MKRuntimeException{" +
-                "message='" + message + '\'' +
+                "code='" + code + '\'' +
+                ", args=" + Arrays.toString(args) +
                 ", cause=" + cause +
                 ", errorCode=" + errorCode +
                 '}';
