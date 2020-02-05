@@ -1,9 +1,9 @@
 package com.mk.auth.core.api;
 
-import com.alibaba.fastjson.JSON;
+import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.model.ServerResponse;
-import com.mk.auth.core.constant.AuthConstant;
+import com.mk.auth.core.constant.AuthErrorCodeConstant;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthClient;
 import com.mk.auth.core.entity.AuthUser;
@@ -12,12 +12,10 @@ import com.mk.auth.core.service.AuthenticateService;
 import com.mk.auth.core.service.ClientService;
 import com.mk.auth.core.util.TokenUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
+/*
  * @Author liumingkang
  * @Date 2020-02-02 08:39
  * @Destcription 负责整个MK系统的鉴权
@@ -45,51 +43,56 @@ public class AuthenticationApi
     @Resource(name = "clientService")
     private ClientService clientService;
 
-    @Autowired
+    @Resource(name = "redisTemplate")
     private RedisTemplate redisTemplate;
 
     @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
+    @ApiOperation(value = "获取token", notes = "登陆认证接口")
     public ServerResponse toGetAccessToken(@RequestParam("username") String username,
                                            @RequestParam("password") String password,
                                            HttpServletRequest request)
     {
         try
         {
-            /** 认证 */
+            // 认证
             AuthUser authenticate = authenticateService.authenticate(new AuthUser(username, password));
             if (null == authenticate)
             {
+                log.warn(CommonConstant.LOG_PREFIX + "auth failed! User is not exist!");
                 return ServerResponse.createByError("User is not exist! Auth failed!");
             }
-            log.info(CommonConstant.LOG_PREFIX + "User auth success....");
 
-            /** request header中必须有约定好的code 才可以获得token */
+            String userAccessTokenKey = TokenUtils.ACCESS_TOKEN + authenticate.getAuthName();
+            String userRefreshTokenKey = TokenUtils.REFRESH_TOKEN + authenticate.getAuthName();
+            if (redisTemplate.hasKey(userAccessTokenKey))
+            {
+                throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
+            }
+
+            // request header中必须有约定好的code 才可以获得token
             String code = request.getHeader("client_code");
             if (StringUtils.isBlank(code))
             {
                 log.warn("Illeager auth code! check your code!");
-                throw new MKRuntimeException("Get access token failed! Invaild authenicate certificate!");
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE);
             }
             AuthClient byKey = clientService.findByKey(code);
             if (null == byKey)
             {
                 log.warn("Auth code is not correct! check your code!");
-                throw new MKRuntimeException("Get access token failed! Invaild authenicate certificate!");
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE);
             }
-            /** 生成Token */
+            // 生成Token
             MKToken mkToken = new MKToken();
             TokenUtils.initToken(mkToken, TokenUtils.WEB_TOKEN);
-            /** 存入redis */
-            authenticate.clearPass();
-            redisTemplate.opsForValue().set(mkToken.getAccessToken(), JSON.toJSONString(authenticate));
-            redisTemplate.expire(mkToken.getAccessToken(), mkToken.getExpire(), TimeUnit.MINUTES);
-
-            redisTemplate.opsForValue().set(mkToken.getRefreshToken(), JSON.toJSONString(mkToken.getAccessToken()));
-            redisTemplate.expire(mkToken.getRefreshToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
-            return ServerResponse.createBySuccess(mkToken, "Auth success!");
+            // token存入redis
+            redisTemplate.opsForValue().set(userAccessTokenKey, mkToken.getAccessToken(), mkToken.getExpire(), TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(userRefreshTokenKey, mkToken.getRefreshToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+            return ServerResponse.createBySuccess(mkToken);
         }
         catch (MKRuntimeException e)
         {
+            ErrorCode errorCode = e.getErrorCode();
             return ServerResponse.createByError(e.getMessage());
         }
         catch (Exception e)
@@ -110,7 +113,7 @@ public class AuthenticationApi
         return ServerResponse.createBySuccess();
     }
 
-    /** gatway每次做转发router的时候 都会调用此接口 做认证 */
+    // gatway每次做转发router的时候 都会调用此接口 做认证
     @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
     public ServerResponse toCheckToken(@RequestParam("access_token") String accessToken)
     {
@@ -129,7 +132,9 @@ public class AuthenticationApi
             return ServerResponse.createByError("AccessToken is invaild!");
         }
 
-        return ServerResponse.createBySuccess(res, "AccessToken is vaild!");
+        Map<String, String> authRes = new HashMap<>();
+        authRes.put("auth_status", res.toString());
+        return ServerResponse.createBySuccess();
     }
 
 

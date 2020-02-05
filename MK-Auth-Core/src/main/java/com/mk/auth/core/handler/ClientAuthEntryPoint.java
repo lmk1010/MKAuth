@@ -32,7 +32,7 @@ public class ClientAuthEntryPoint implements AuthenticationEntryPoint
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException
     {
         log.error(CommonConstant.LOG_PREFIX + authException.getMessage());
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(ServerResponse.createByError(HttpStatus.SC_FORBIDDEN, authException.getMessage()));
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(ServerResponse.createByError(HttpStatus.SC_FORBIDDEN));
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");

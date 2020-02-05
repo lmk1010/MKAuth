@@ -2,6 +2,7 @@ package com.mk.auth.core.util;
 
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.core.constant.CommonConstant;
+import com.mk.auth.core.entity.AuthUser;
 import com.mk.auth.core.model.MKToken;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,12 @@ public class TokenUtils
 
     /** Assistant Token */
     public static final String ASSISTANT_TOKEN = "TOKEM_NAVIOUS";
+
+    /** access_token */
+    public static final String ACCESS_TOKEN = "ACCESS_TOKEN_";
+
+    /** refresh_token */
+    public static final String REFRESH_TOKEN = "REFRESH_TOKEN_";
 
     /** Token的前缀 */
     public static final String SPERATE = "_";

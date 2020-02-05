@@ -1,5 +1,7 @@
 package com.mk.auth.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -19,6 +21,7 @@ public class AuthUser implements Serializable
     private String authName;
 
     /** 认证密码 实际的登陆密码 **/
+    @JsonIgnore
     private String authPass;
 
     /** user id 用户信息的关联标示**/

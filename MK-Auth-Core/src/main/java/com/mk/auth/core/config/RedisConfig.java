@@ -20,6 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig
 {
     @Bean
+    @SuppressWarnings("unchecked")
     public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
 
         RedisTemplate template = new RedisTemplate<>();
