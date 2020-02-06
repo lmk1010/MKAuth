@@ -12,4 +12,5 @@ public interface AuthErrorCodeConstant
 
     String ALREADY_LOGIN = "900003";
 
+
 }

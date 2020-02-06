@@ -2,6 +2,7 @@ package com.mk.auth.core.service.impl;
 
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
+import com.mk.auth.core.constant.AuthErrorCodeConstant;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
 import com.mk.auth.core.service.AuthenticateService;
@@ -37,20 +38,19 @@ public class AuthenticateServiceImpl implements AuthenticateService
     {
         if(null == user)
         {
-            log.error(CommonConstant.LOG_PREFIX + "User is empty!");
-            throw new MKRuntimeException("Illeager argument! user is empty!");
+            log.warn(CommonConstant.LOG_PREFIX + "User is empty!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"Illeager argument! user is empty!"});
         }
         AuthUser realUser = userService.findUserByName(user.getAuthName());
         if (null == realUser)
         {
-            log.error(CommonConstant.LOG_PREFIX + "User is not exist!");
-            throw new MKRuntimeException("User is not exist!");
+            log.warn(CommonConstant.LOG_PREFIX + "User is not exist!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"User is not exist!"});
         }
-
         if (!StringUtils.equals(realUser.getAuthName(), user.getAuthName()) || !encoder.matches(user.getAuthPass(), realUser.getAuthPass()))
         {
-            log.error(CommonConstant.LOG_PREFIX + "User authenicate failed! password or username is not correct!");
-            throw new MKRuntimeException("User authenicate failed! password or username is not correct!");
+            log.warn(CommonConstant.LOG_PREFIX + "User authenicate failed! password or username is not correct!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"User authenicate failed! password or username is not correct!"});
         }
         return realUser;
     }

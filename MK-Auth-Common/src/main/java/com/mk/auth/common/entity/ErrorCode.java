@@ -25,7 +25,6 @@ public class ErrorCode implements Serializable
     @JsonIgnore
     private String lang;
     // 嵌套错误信息
-    @JsonIgnore
     private ErrorCode causedBy;
 
 
@@ -52,6 +51,12 @@ public class ErrorCode implements Serializable
         this.errorMsg = errorMsg;
         this.solution = solution;
         this.cause = cause;
+    }
+
+    public ErrorCode(String code, String cause, ErrorCode causedBy) {
+        this.code = code;
+        this.cause = cause;
+        this.causedBy = causedBy;
     }
 
     public ErrorCode(String code, String errorMsg, String solution, String cause, String lang, ErrorCode causedBy) {

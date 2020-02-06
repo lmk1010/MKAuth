@@ -30,11 +30,6 @@ public class TestApi
         return "check success!";
     }
 
-    @GetMapping("/testerror")
-    public String toerrorcode()
-    {
-        return ErrorCodeUtil.translateInfo(ErrorCodeContant.COMMON_ERROR).toString();
-    }
 
     @GetMapping("/error")
     public String error()

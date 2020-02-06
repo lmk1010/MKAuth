@@ -11,9 +11,9 @@ public class ErrorCodeContant {
     // 国际化 英文
     public static final String ENGLISH = "en";
     // 国际化 中文
-    public static final String CHINESE = "zh-cn";
+    public static final String CHINESE = "zh_cn";
     // 通用错误码
-    public static final String COMMON_ERROR = "09000001";
+    public static final String COMMON_ERROR = "100000";
     // 服务器无响应
     public static final String SERVER_FAILED = "09000002";
 

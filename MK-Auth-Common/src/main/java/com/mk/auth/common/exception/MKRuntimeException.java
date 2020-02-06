@@ -19,13 +19,10 @@ public class MKRuntimeException extends RuntimeException
 
     private Throwable cause;
 
-    private ErrorCode errorCode;
-
     public MKRuntimeException()
     {
 
     }
-
 
     public MKRuntimeException(String code, String[] args) {
         this.code = code;
@@ -48,15 +45,6 @@ public class MKRuntimeException extends RuntimeException
         this.cause = cause;
     }
 
-    public ErrorCode getErrorCode()
-    {
-        return errorCode;
-    }
-
-    public void setErrorCode(ErrorCode errorCode)
-    {
-        this.errorCode = errorCode;
-    }
 
     public String getCode() {
         return code;
@@ -74,13 +62,13 @@ public class MKRuntimeException extends RuntimeException
         this.args = args;
     }
 
+
     @Override
     public String toString() {
         return "MKRuntimeException{" +
                 "code='" + code + '\'' +
                 ", args=" + Arrays.toString(args) +
                 ", cause=" + cause +
-                ", errorCode=" + errorCode +
                 '}';
     }
 }

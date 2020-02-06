@@ -91,10 +91,8 @@ public class MKException extends Exception{
         // todo 未来要经过翻译器 从DB或者XML里面去load错误码的其他属性
         // todo errorCode = ErrorCodeUtil.tanslateInfo(this.code);
 
-        String errorCodeInfo = ErrorCodeUtil.toErrorCodeJson(errorCode).toJSONString();
-
         return "MKException{" +
-                "errorCodeInfo=" + errorCodeInfo +", " +
+                "errorCodeInfo=, " +
                 "exception=" + ex +
                 '}';
     }

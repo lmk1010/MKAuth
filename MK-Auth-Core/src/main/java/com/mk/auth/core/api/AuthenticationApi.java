@@ -4,6 +4,7 @@ import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.factory.ErrorCodeTranslaterFactory;
 import com.mk.auth.common.model.ServerResponse;
+import com.mk.auth.common.utils.errorcode.ExceptionUtils;
 import com.mk.auth.core.constant.AuthErrorCodeConstant;
 import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthClient;
@@ -57,12 +58,6 @@ public class AuthenticationApi
         {
             // 认证
             AuthUser authenticate = authenticateService.authenticate(new AuthUser(username, password));
-            if (null == authenticate)
-            {
-                log.warn(CommonConstant.LOG_PREFIX + "auth failed! User is not exist!");
-                return ServerResponse.createByError("User is not exist! Auth failed!");
-            }
-
             String userAccessTokenKey = TokenUtils.ACCESS_TOKEN + authenticate.getAuthName();
             String userRefreshTokenKey = TokenUtils.REFRESH_TOKEN + authenticate.getAuthName();
             if (redisTemplate.hasKey(userAccessTokenKey))
@@ -91,15 +86,10 @@ public class AuthenticationApi
             redisTemplate.opsForValue().set(userRefreshTokenKey, mkToken.getRefreshToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
             return ServerResponse.createBySuccess(mkToken);
         }
-        catch (MKRuntimeException e)
-        {
-            ErrorCode translater = ErrorCodeTranslaterFactory.getInstance().translater(new ErrorCode("900002"));
-
-            return ServerResponse.createByError(translater);
-        }
         catch (Exception e)
         {
-            return ServerResponse.createByError(e.getMessage());
+            ErrorCode errorCodeFromException = ExceptionUtils.getErrorCodeFromException(e);
+            return ServerResponse.createByError(errorCodeFromException);
         }
     }
 
@@ -110,8 +100,14 @@ public class AuthenticationApi
     }
 
     @RequestMapping(value = "/clearToken", method = RequestMethod.POST)
-    public ServerResponse toClearToken()
+    public ServerResponse toClearToken(HttpServletRequest request)
     {
+        String access_token = request.getHeader("access_token");
+        if (StringUtils.isBlank(access_token))
+        {
+            return ServerResponse.createByError("AccessToken is empty！");
+        }
+
         return ServerResponse.createBySuccess();
     }
 

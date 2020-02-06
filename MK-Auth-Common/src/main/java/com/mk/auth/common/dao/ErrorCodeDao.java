@@ -1,6 +1,7 @@
 package com.mk.auth.common.dao;
 
 import com.mk.auth.common.entity.ErrorCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,11 +18,15 @@ import java.sql.ResultSet;
 public class ErrorCodeDao
 {
 
-    public static ErrorCode findByCode(String code) throws Exception
+    public static ErrorCode findByCode(String code, String local) throws Exception
     {
-        ResultSet resultSet = CommonDao.excuteQuerySQL("select * from mk_errorcode where code = " + code + " limit 1");
-
-        return convertResult(resultSet);
+        String sql = "select * from mk_errorcode where code = " + code + " limit 1";
+        ErrorCode errorCode = convertResult(CommonDao.excuteQuerySQL(sql));
+        if (null == errorCode || StringUtils.isBlank(errorCode.getCode()))
+        {
+            return new ErrorCode(code, code + ".errorMsg", code + ".solution", code + ".cause");
+        }
+        return errorCode;
     }
 
 
