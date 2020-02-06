@@ -1,7 +1,7 @@
 package com.mk.auth.common.utils.mysql;
 
-import com.google.common.collect.Queues;
-import org.springframework.security.core.parameters.P;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +17,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  **/
 public class JdbcUtils
 {
+
+    private static final Logger log = LoggerFactory.getLogger(JdbcUtils.class);
+
     private static String driverClass = "com.mysql.cj.jdbc.Driver";
     private static String url = "jdbc:mysql://localhost:3306/mk";
     private static String user = "root";
@@ -42,11 +45,33 @@ public class JdbcUtils
     /**
      * 获取 Connetion
      * @return
-     * @throws SQLException
      */
-    public static Connection getConnection() throws SQLException
+    public static Connection getConnection()
     {
-        Connection conn = DriverManager.getConnection(url, user, password);
-        return conn;
+        // TODO: 2020-02-06 暂时不设限制connection获取
+        try
+        {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            return conn;
+        }
+        catch (Exception e)
+        {
+            log.error("DB connect happend error! detail:{}", e.getMessage());
+            return null;
+        }
     }
+
+    public static void close(Connection connection)
+    {
+        try
+        {
+            connection.close();
+        }
+        catch (Exception e)
+        {
+            log.warn("Close mysql connection failed! detail:{}", e.getMessage());
+        }
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.mk.auth.core.api;
 
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
+import com.mk.auth.common.factory.ErrorCodeTranslaterFactory;
 import com.mk.auth.common.model.ServerResponse;
 import com.mk.auth.core.constant.AuthErrorCodeConstant;
 import com.mk.auth.core.constant.CommonConstant;
@@ -92,8 +93,9 @@ public class AuthenticationApi
         }
         catch (MKRuntimeException e)
         {
-            ErrorCode errorCode = e.getErrorCode();
-            return ServerResponse.createByError(e.getMessage());
+            ErrorCode translater = ErrorCodeTranslaterFactory.getInstance().translater(new ErrorCode("900002"));
+
+            return ServerResponse.createByError(translater);
         }
         catch (Exception e)
         {

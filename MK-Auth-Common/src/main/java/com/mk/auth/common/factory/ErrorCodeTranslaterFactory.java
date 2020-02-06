@@ -1,6 +1,6 @@
 package com.mk.auth.common.factory;
 
-import com.mk.auth.common.instance.ErrorcodeTranslater;
+import com.mk.auth.common.instance.ErrorCodeTranslater;
 
 /**
  * @Author liumingkang
@@ -10,13 +10,13 @@ import com.mk.auth.common.instance.ErrorcodeTranslater;
  **/
 public class ErrorCodeTranslaterFactory
 {
-    public static ErrorcodeTranslater errorcodeTranslater;
+    public static ErrorCodeTranslater errorcodeTranslater;
 
-    public static ErrorcodeTranslater getInstance()
+    public static ErrorCodeTranslater getInstance()
     {
         if (errorcodeTranslater == null)
         {
-            errorcodeTranslater = new ErrorcodeTranslater();
+            errorcodeTranslater = new ErrorCodeTranslater();
         }
         return errorcodeTranslater;
     }

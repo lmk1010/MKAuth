@@ -1,5 +1,7 @@
 package com.mk.auth.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 /**
@@ -20,8 +22,10 @@ public class ErrorCode implements Serializable
     // 原因
     private String cause;
     // 类型
+    @JsonIgnore
     private String lang;
     // 嵌套错误信息
+    @JsonIgnore
     private ErrorCode causedBy;
 
 
