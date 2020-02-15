@@ -47,8 +47,9 @@ public class TokenUtils
     private static final String[] tokenArray = new String[]{APP_TOKEN, WEB_TOKEN, ASSISTANT_TOKEN};
 
     /** 初始化Token信息 */
-    public static void initToken(MKToken mkToken, String tokenType)
+    public static MKToken initToken(String tokenType)
     {
+        MKToken mkToken = new MKToken();
         if (null == mkToken || StringUtils.isBlank(tokenType))
         {
             log.error(CommonConstant.LOG_PREFIX + "Illega argument!");
@@ -63,6 +64,8 @@ public class TokenUtils
         mkToken.setAccessType(tokenType);
         mkToken.setExpire(DEFAULT_EXPIRE);
         mkToken.setRefreshToken(createRefreshToken());
+
+        return mkToken;
     }
 
     /** AccessToken的生成规则 */

@@ -8,8 +8,10 @@ package com.mk.auth.core.constant;
  **/
 public interface AuthErrorCodeConstant
 {
-    String INVAILD_CERTIFICATE = "900002";
+    // 无效的客户端凭证
+    String INVAILD_CLIENT_CERTIFICATE = "900002";
 
+    // 已经登陆
     String ALREADY_LOGIN = "900003";
 
 

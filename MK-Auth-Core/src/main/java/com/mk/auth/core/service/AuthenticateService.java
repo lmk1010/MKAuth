@@ -1,6 +1,9 @@
 package com.mk.auth.core.service;
 
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.model.MKToken;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Author liumingkang
@@ -16,6 +19,6 @@ public interface AuthenticateService
      * @Param [user]
      * @return int 1为成功 0为失败
      **/
-    public AuthUser authenticate(AuthUser user);
+    public MKToken authenticate(AuthUser user, HttpServletRequest request) throws Exception;
 
 }

@@ -12,6 +12,8 @@ import java.util.List;
  **/
 public interface UserService
 {
+    AuthUser authenticateUser(String username, String password);
+
     List<AuthUser> findAllUsers();
 
     AuthUser findUserByName(String username);

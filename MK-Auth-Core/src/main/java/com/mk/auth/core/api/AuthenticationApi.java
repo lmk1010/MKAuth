@@ -1,5 +1,6 @@
 package com.mk.auth.core.api;
 
+import com.alibaba.fastjson.JSON;
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.factory.ErrorCodeTranslaterFactory;
@@ -18,9 +19,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,35 +60,8 @@ public class AuthenticationApi
     {
         try
         {
-            // 认证
-            AuthUser authenticate = authenticateService.authenticate(new AuthUser(username, password));
-            String userAccessTokenKey = TokenUtils.ACCESS_TOKEN + authenticate.getAuthName();
-            String userRefreshTokenKey = TokenUtils.REFRESH_TOKEN + authenticate.getAuthName();
-            if (redisTemplate.hasKey(userAccessTokenKey))
-            {
-                throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
-            }
-
-            // request header中必须有约定好的code 才可以获得token
-            String code = request.getHeader("client_code");
-            if (StringUtils.isBlank(code))
-            {
-                log.warn("Illeager auth code! check your code!");
-                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE);
-            }
-            AuthClient byKey = clientService.findByKey(code);
-            if (null == byKey)
-            {
-                log.warn("Auth code is not correct! check your code!");
-                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE);
-            }
-            // 生成Token
-            MKToken mkToken = new MKToken();
-            TokenUtils.initToken(mkToken, TokenUtils.WEB_TOKEN);
-            // token存入redis
-            redisTemplate.opsForValue().set(userAccessTokenKey, mkToken.getAccessToken(), mkToken.getExpire(), TimeUnit.MINUTES);
-            redisTemplate.opsForValue().set(userRefreshTokenKey, mkToken.getRefreshToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
-            return ServerResponse.createBySuccess(mkToken);
+            // 认证 采用的token颁发 采用同一账户同一ip只能登陆一次的限制
+            return ServerResponse.createBySuccess(authenticateService.authenticate(new AuthUser(username, password), request));
         }
         catch (Exception e)
         {

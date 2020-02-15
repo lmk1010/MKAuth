@@ -7,6 +7,7 @@ import com.mk.auth.core.dao.UserDao;
 import com.mk.auth.core.entity.AuthClient;
 import com.mk.auth.core.entity.AuthRole;
 import com.mk.auth.core.entity.AuthUser;
+import com.mk.auth.core.model.MKToken;
 import com.mk.auth.core.service.ClientService;
 import com.mk.auth.core.service.RoleService;
 import com.mk.auth.core.service.UserService;
@@ -47,6 +48,18 @@ public class AppTest
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
+    @Test
+    public void testClass()
+    {
+        MKToken mkToken = new MKToken();
+        if (mkToken == null)
+        {
+            System.err.println("kong");
+        }
+        else {
+            System.err.println(mkToken.toString());
+        }
+    }
 
     @Test
     public void testRedis()

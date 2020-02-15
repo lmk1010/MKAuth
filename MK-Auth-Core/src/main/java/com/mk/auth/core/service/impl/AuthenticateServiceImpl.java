@@ -1,22 +1,25 @@
 package com.mk.auth.core.service.impl;
 
-import com.mk.auth.common.entity.ErrorCode;
+import com.alibaba.fastjson.JSON;
 import com.mk.auth.common.exception.MKRuntimeException;
+import com.mk.auth.common.utils.network.IPUtils;
 import com.mk.auth.core.constant.AuthErrorCodeConstant;
-import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
-import com.mk.auth.core.service.AuthenticateService;
-import com.mk.auth.core.service.RoleService;
-import com.mk.auth.core.service.UserService;
+import com.mk.auth.core.model.MKToken;
+import com.mk.auth.core.service.*;
+import com.mk.auth.core.util.TokenUtils;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.sisu.plexus.Roles;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author liumingkang
@@ -25,6 +28,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  **/
 @Service("authenticateService")
+@Transactional
 @Slf4j
 public class AuthenticateServiceImpl implements AuthenticateService
 {
@@ -33,25 +37,31 @@ public class AuthenticateServiceImpl implements AuthenticateService
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "redisTemplate")
+    private RedisTemplate redisTemplate;
+
     @Override
-    public AuthUser authenticate(AuthUser user)
+    public MKToken authenticate(AuthUser user, HttpServletRequest request)
     {
-        if(null == user)
+        // 用户认证
+        AuthUser authUser = userService.authenticateUser(user.getAuthName(), user.getAuthPass());
+        // 清空密码
+        authUser.clearPass();
+        // 获取登陆ip
+        String ipAddress = IPUtils.getIpAddress(request);
+        // 校验是否已经认证过
+        String tokenPrefix = TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + "*";
+        Set<String> userTokenSet = redisTemplate.keys(tokenPrefix);
+        if (CollectionUtils.isNotEmpty(userTokenSet))
         {
-            log.warn(CommonConstant.LOG_PREFIX + "User is empty!");
-            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"Illeager argument! user is empty!"});
+            log.warn("User already login!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
         }
-        AuthUser realUser = userService.findUserByName(user.getAuthName());
-        if (null == realUser)
-        {
-            log.warn(CommonConstant.LOG_PREFIX + "User is not exist!");
-            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"User is not exist!"});
-        }
-        if (!StringUtils.equals(realUser.getAuthName(), user.getAuthName()) || !encoder.matches(user.getAuthPass(), realUser.getAuthPass()))
-        {
-            log.warn(CommonConstant.LOG_PREFIX + "User authenicate failed! password or username is not correct!");
-            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CERTIFICATE, new String[]{"User authenicate failed! password or username is not correct!"});
-        }
-        return realUser;
+        // 初始化登陆token信息
+        MKToken mkToken = TokenUtils.initToken(TokenUtils.WEB_TOKEN);
+        // token存入redis
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+        return mkToken;
     }
 }
