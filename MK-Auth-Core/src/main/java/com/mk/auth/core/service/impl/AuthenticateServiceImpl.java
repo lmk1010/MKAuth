@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.utils.network.IPUtils;
 import com.mk.auth.core.constant.AuthErrorCodeConstant;
+import com.mk.auth.core.constant.CommonConstant;
 import com.mk.auth.core.entity.AuthUser;
 import com.mk.auth.core.model.MKToken;
 import com.mk.auth.core.service.*;
@@ -11,6 +12,7 @@ import com.mk.auth.core.util.TokenUtils;
 import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,14 +56,54 @@ public class AuthenticateServiceImpl implements AuthenticateService
         Set<String> userTokenSet = redisTemplate.keys(tokenPrefix);
         if (CollectionUtils.isNotEmpty(userTokenSet))
         {
-            log.warn("User already login!");
+            log.warn(CommonConstant.LOG_PREFIX + "User already login!");
             throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
         }
         // 初始化登陆token信息
         MKToken mkToken = TokenUtils.initToken(TokenUtils.WEB_TOKEN);
         // token存入redis
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + TokenUtils.ACCESS_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + TokenUtils.REFRESH_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+        return mkToken;
+    }
+
+    @Override
+    public MKToken authenticateToken(String accessToken)
+    {
+        Set<String> keys = redisTemplate.keys("*" + accessToken);
+        if (CollectionUtils.isEmpty(keys))
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "AccessToken is invaild!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_TOKEN);
+        }
+        // 取第一个key 更加token的生成规则 后缀匹配实际也只会有一个
+        String userTokenKey = (String) keys.toArray()[0];
+
+        MKToken mkToken = new MKToken();
+        if (StringUtils.startsWith(userTokenKey, TokenUtils.WEB_TOKEN))
+        {
+            mkToken.setAccessType(TokenUtils.WEB_TOKEN);
+        }
+        else if (StringUtils.startsWith(userTokenKey, TokenUtils.APP_TOKEN))
+        {
+            mkToken.setAccessType(TokenUtils.ACCESS_TOKEN);
+        }
+        else if (StringUtils.startsWith(userTokenKey, TokenUtils.ASSISTANT_TOKEN))
+        {
+            mkToken.setAccessType(TokenUtils.ASSISTANT_TOKEN);
+        }
+        else
+        {
+            log.error(CommonConstant.LOG_PREFIX + "Invaild token type!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_TOKEN_TYPE);
+        }
+        // 获得剩余时间
+        Long expire = redisTemplate.getExpire(userTokenKey);
+        mkToken.setExpire(expire);
+        mkToken.setAccessToken(accessToken);
+        // 这里不返回刷新token
+        mkToken.setRefreshToken("");
+
         return mkToken;
     }
 }

@@ -14,5 +14,14 @@ public interface AuthErrorCodeConstant
     // 已经登陆
     String ALREADY_LOGIN = "900003";
 
+    // 无效的token种类
+    String INVAILD_TOKEN_TYPE = "900006";
+
+    // 无效的token
+    String INVALID_TOKEN = "900008";
+
+    // 无效的输入参数
+    String INVALID_PARAM = "900009";
+
 
 }

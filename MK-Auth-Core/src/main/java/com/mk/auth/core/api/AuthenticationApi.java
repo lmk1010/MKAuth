@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.mk.auth.common.entity.ErrorCode;
 import com.mk.auth.common.exception.MKRuntimeException;
 import com.mk.auth.common.factory.ErrorCodeTranslaterFactory;
+import com.mk.auth.common.instance.ErrorCodeTranslater;
 import com.mk.auth.common.model.ServerResponse;
 import com.mk.auth.common.utils.errorcode.ExceptionUtils;
 import com.mk.auth.core.constant.AuthErrorCodeConstant;
@@ -60,6 +61,10 @@ public class AuthenticationApi
     {
         try
         {
+            if(StringUtils.isBlank(username) || StringUtils.isBlank(password))
+            {
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CLIENT_CERTIFICATE, new String[]{"illeagr request param"});
+            }
             // 认证 采用的token颁发 采用同一账户同一ip只能登陆一次的限制
             return ServerResponse.createBySuccess(authenticateService.authenticate(new AuthUser(username, password), request));
         }
@@ -92,24 +97,24 @@ public class AuthenticationApi
     @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
     public ServerResponse toCheckToken(@RequestParam("access_token") String accessToken)
     {
-        if(StringUtils.isBlank(accessToken))
+        try
         {
-            return ServerResponse.createByError("AccessToken is empty!");
+            if(StringUtils.isBlank(accessToken))
+            {
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_PARAM);
+            }
+            MKToken mkToken = authenticateService.authenticateToken(accessToken);
+            if (null == mkToken || StringUtils.isBlank(mkToken.getAccessToken()))
+            {
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_TOKEN);
+            }
+            return ServerResponse.createBySuccess(mkToken);
         }
-        if (!TokenUtils.isMKToken(accessToken))
+        catch (Exception e)
         {
-            log.warn(CommonConstant.LOG_PREFIX + "Error accessToken type!");
-            return ServerResponse.createByError("Error accessToken type!");
+            ErrorCode errorCodeFromException = ExceptionUtils.getErrorCodeFromException(e);
+            return ServerResponse.createByError(errorCodeFromException);
         }
-        Boolean res = redisTemplate.hasKey(accessToken);
-        if (!res)
-        {
-            return ServerResponse.createByError("AccessToken is invaild!");
-        }
-
-        Map<String, String> authRes = new HashMap<>();
-        authRes.put("auth_status", res.toString());
-        return ServerResponse.createBySuccess();
     }
 
 

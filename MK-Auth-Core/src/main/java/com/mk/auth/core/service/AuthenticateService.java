@@ -14,11 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 public interface AuthenticateService
 {
     /**
-     * @Description 实际认证鉴权方法
+     * @Description 登陆认证方法
      * @Date 12:35 2020-02-02
-     * @Param [user]
-     * @return int 1为成功 0为失败
+     * @Param [user,request]
+     * @return com.mk.auth.core.model.MKToken
      **/
     public MKToken authenticate(AuthUser user, HttpServletRequest request) throws Exception;
+
+    /**
+     * @Description 实际鉴权方法
+     * @Date 22:45 2020-02-15
+     * @Param []
+     * @return com.mk.auth.core.model.MKToken
+     **/
+    public MKToken authenticateToken(String accessToken);
 
 }
