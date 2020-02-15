@@ -106,4 +106,17 @@ public class AuthenticateServiceImpl implements AuthenticateService
 
         return mkToken;
     }
+
+    @Override
+    public MKToken refreshAccessToken(String refreshToken)
+    {
+        return null;
+    }
+
+    @Override
+    public boolean destoryToken(String accessToken)
+    {
+
+        return false;
+    }
 }

@@ -19,7 +19,7 @@ public interface AuthenticateService
      * @Param [user,request]
      * @return com.mk.auth.core.model.MKToken
      **/
-    public MKToken authenticate(AuthUser user, HttpServletRequest request) throws Exception;
+    MKToken authenticate(AuthUser user, HttpServletRequest request) throws Exception;
 
     /**
      * @Description 实际鉴权方法
@@ -27,6 +27,22 @@ public interface AuthenticateService
      * @Param []
      * @return com.mk.auth.core.model.MKToken
      **/
-    public MKToken authenticateToken(String accessToken);
+    MKToken authenticateToken(String accessToken);
+
+    /**
+     * @Description 刷新AccessToken
+     * @Date 23:38 2020-02-15
+     * @Param [refreshToken]
+     * @return com.mk.auth.core.model.MKToken
+     **/
+    MKToken refreshAccessToken(String refreshToken);
+
+    /**
+     * @Description 摧毁用户的token 退出登陆
+     * @Date 00:29 2020-02-16
+     * @Param [accessToken]
+     * @return boolean
+     **/
+    boolean destoryToken(String accessToken);
 
 }

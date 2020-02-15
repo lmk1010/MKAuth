@@ -27,11 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-/*
+/**
  * @Author liumingkang
  * @Date 2020-02-02 08:39
  * @Destcription 负责整个MK系统的鉴权
@@ -66,7 +63,8 @@ public class AuthenticationApi
                 throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CLIENT_CERTIFICATE, new String[]{"illeagr request param"});
             }
             // 认证 采用的token颁发 采用同一账户同一ip只能登陆一次的限制
-            return ServerResponse.createBySuccess(authenticateService.authenticate(new AuthUser(username, password), request));
+            MKToken authenticate = authenticateService.authenticate(new AuthUser(username, password), request);
+            return ServerResponse.createBySuccess(authenticate);
         }
         catch (Exception e)
         {
@@ -84,16 +82,34 @@ public class AuthenticationApi
     @RequestMapping(value = "/clearToken", method = RequestMethod.POST)
     public ServerResponse toClearToken(HttpServletRequest request)
     {
-        String access_token = request.getHeader("access_token");
-        if (StringUtils.isBlank(access_token))
+        try
         {
-            return ServerResponse.createByError("AccessToken is empty！");
+            String accessToken = request.getHeader("access_token");
+            if (StringUtils.isBlank(accessToken))
+            {
+                // 如果header没有accessToken尝试参数获取
+                accessToken = request.getParameter("access_token");
+                // 如果还是为空 抛出异常
+                if(StringUtils.isBlank(accessToken))
+                {
+                    throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_PARAM);
+                }
+            }
+            boolean result = authenticateService.destoryToken(accessToken);
+            return ServerResponse.createBySuccess(result);
         }
-
-        return ServerResponse.createBySuccess();
+        catch (Exception e)
+        {
+            ErrorCode errorCodeFromException = ExceptionUtils.getErrorCodeFromException(e);
+            return ServerResponse.createByError(errorCodeFromException);
+        }
     }
 
-    // gatway每次做转发router的时候 都会调用此接口 做认证
+    /**
+     * @Author liumingkang
+     * @Description gatway每次做转发router的时候 都会调用此接口 做鉴权token的有效性
+     * @Date 23:32 2020-02-15
+     **/
     @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
     public ServerResponse toCheckToken(@RequestParam("access_token") String accessToken)
     {
