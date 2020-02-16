@@ -49,8 +49,8 @@ public class ClientWebSecruityConfig extends WebSecurityConfigurerAdapter
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
         /** 若注入了这两项会自动使用DaoProvider 所以注释掉 采用自定义的provider*/
-//        auth.userDetailsService(authUserDetailsService)
-//                .passwordEncoder(encoder);
+//        auth.userDetailsService(clientAuthUserDetailsService)
+//                .passwordEncoder(new BCryptPasswordEncoder());
         auth.authenticationProvider(clientAuthProvider);
     }
 
@@ -76,7 +76,7 @@ public class ClientWebSecruityConfig extends WebSecurityConfigurerAdapter
     @Override
     public void configure(WebSecurity web)
     {
-        web.ignoring().antMatchers("/favicon.ico");
+        web.ignoring().antMatchers("/swagger-resources/**", "/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**");
     }
 
     /**
@@ -90,12 +90,17 @@ public class ClientWebSecruityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        http.httpBasic().and()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and().formLogin().successHandler(clientAuthSuccessHandler)
-                .and().exceptionHandling().accessDeniedHandler(clientAccessDeniedExceptionHandler).authenticationEntryPoint(clientAuthEntryPoint)
-                .and().csrf().disable();
+        http.httpBasic()
+                .and()
+                  .authorizeRequests()
+                  .antMatchers("/webjars/*","/swagger-resources/*","/swagger-ui.html").permitAll()
+                  .anyRequest().authenticated()
+                .and()
+                  .formLogin().successHandler(clientAuthSuccessHandler)
+                .and()
+                  .exceptionHandling().accessDeniedHandler(clientAccessDeniedExceptionHandler).authenticationEntryPoint(clientAuthEntryPoint)
+                .and()
+                  .csrf().disable();
     }
 
 

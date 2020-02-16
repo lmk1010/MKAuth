@@ -34,6 +34,7 @@ public class ClientAuthEntryPoint implements AuthenticationEntryPoint
         log.error(CommonConstant.LOG_PREFIX + authException.getMessage());
         JSONObject jsonObject = (JSONObject) JSONObject.toJSON(ServerResponse.createByError(HttpStatus.SC_FORBIDDEN));
 
+        jsonObject.put("msg", "Need authenicate use basic auth!");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(jsonObject.toJSONString());
