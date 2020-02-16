@@ -23,5 +23,8 @@ public interface AuthErrorCodeConstant
     // 无效的输入参数
     String INVALID_PARAM = "900009";
 
+    // 清除token失败
+    String DESTORY_TOKEN_FAILED = "900010";
+
 
 }

@@ -74,8 +74,6 @@ public class TokenUtils
     {
         // TODO: 2020-02-02 后期要加规则
         StringBuffer sb = new StringBuffer();
-        /** 前缀 */
-        sb.append(tokenType).append(SPERATE);
         /** UUID */
         sb.append(UUID.randomUUID());
         return sb.toString();
@@ -87,21 +85,5 @@ public class TokenUtils
         return UUID.randomUUID().toString();
     }
 
-    /**
-     *
-     * @Author liumingkang
-     * @Description 判断为MKToken的格式
-     * @Date 17:34 2020-02-05
-     * @Param [accessToken]
-     * @return boolean
-     **/
-    public static boolean isMKToken(String accessToken)
-    {
-        if (Arrays.stream(tokenArray).anyMatch(t -> StringUtils.startsWith(accessToken, t)))
-        {
-            return true;
-        }
-        return false;
-    }
 
 }

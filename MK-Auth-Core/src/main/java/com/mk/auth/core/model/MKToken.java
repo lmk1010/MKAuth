@@ -29,6 +29,6 @@ public class MKToken implements Serializable
     private String refreshToken;
 
     @JSONField(name = "expire_in")
-    private long expire = AuthConstant.ACCESS_TOKEN_EXPIRE;
+    private long expire;
 
 }

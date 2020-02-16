@@ -60,10 +60,10 @@ public class AuthenticateServiceImpl implements AuthenticateService
             log.warn(CommonConstant.LOG_PREFIX + "User already login!");
             throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
         }
-        // 校验同一用户不同ip只能同时登陆5次
+        // 校验同一用户不同ip只能同时登陆5个设备
         String tokenUserPrefix = TokenUtils.WEB_TOKEN + authUser.getAuthName() + "*";
         Set<String> userTokenSet = redisTemplate.keys(tokenUserPrefix);
-        if (CollectionUtils.isNotEmpty(userTokenSet) && userTokenSet.size() > 3)
+        if (CollectionUtils.isNotEmpty(userTokenSet) && userTokenSet.size() > 5)
         {
             log.warn(CommonConstant.LOG_PREFIX + "User already login!");
             throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
@@ -72,22 +72,22 @@ public class AuthenticateServiceImpl implements AuthenticateService
         // 初始化登陆token信息
         MKToken mkToken = TokenUtils.initToken(TokenUtils.WEB_TOKEN);
         // token存入redis
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getAccessToken() + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.SECONDS);
         return mkToken;
     }
 
     @Override
     public MKToken authenticateToken(String accessToken)
     {
-        Set<String> keys = redisTemplate.keys("*" + accessToken);
-        if (CollectionUtils.isEmpty(keys))
+        Set<String> accessTokenKeys = redisTemplate.keys("*" + accessToken);
+        if (CollectionUtils.isEmpty(accessTokenKeys))
         {
             log.warn(CommonConstant.LOG_PREFIX + "AccessToken is invaild!");
             throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_TOKEN);
         }
         // 取第一个key 更加token的生成规则 后缀匹配实际也只会有一个
-        String userTokenKey = (String) keys.toArray()[0];
+        String userTokenKey = (String) accessTokenKeys.toArray()[0];
 
         MKToken mkToken = new MKToken();
         if (StringUtils.startsWith(userTokenKey, TokenUtils.WEB_TOKEN))
@@ -111,8 +111,19 @@ public class AuthenticateServiceImpl implements AuthenticateService
         Long expire = redisTemplate.getExpire(userTokenKey);
         mkToken.setExpire(expire);
         mkToken.setAccessToken(accessToken);
-        // 这里不返回刷新token
-        mkToken.setRefreshToken("");
+
+        Set<String> refreshTokenKeys = redisTemplate.keys(TokenUtils.WEB_TOKEN + accessToken + "*");
+        if (refreshTokenKeys.size() == 0)
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "Refresh token is empty! error!");
+            mkToken.setRefreshToken("");
+        }
+        else
+        {
+            String refreshToken = (String) refreshTokenKeys.toArray()[0];
+            int index = StringUtils.indexOf(refreshToken, accessToken) + 36;
+            mkToken.setRefreshToken(StringUtils.substring(refreshToken, index, refreshToken.length() - 1));
+        }
 
         return mkToken;
     }
@@ -126,7 +137,33 @@ public class AuthenticateServiceImpl implements AuthenticateService
     @Override
     public boolean destoryToken(String accessToken)
     {
+        Set<String> accessTokenSet = redisTemplate.keys("*" + accessToken);
+        // 目前先针对 web token做摧毁
+        if (accessTokenSet.size() == 0)
+        {
+           log.warn(CommonConstant.LOG_PREFIX + "AccessToken is not exist!");
+        }
+        // 删除access_token
+        Boolean delete = redisTemplate.delete(accessTokenSet.toArray()[0]);
+        if (!delete)
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "Clear access token failed!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.DESTORY_TOKEN_FAILED, new String[]{"Clear access token failed!"});
+        }
+        // 删除refresh_token
+        Set<String> refreshTokenSet = redisTemplate.keys(TokenUtils.WEB_TOKEN + accessToken + "*");
+        if (refreshTokenSet.size() == 0)
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "RefreshToken is not exist!");
+        }
+        Boolean deleteRefreshtoken = redisTemplate.delete(refreshTokenSet.toArray()[0]);
+        if (!deleteRefreshtoken)
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "Clear refresh token failed!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.DESTORY_TOKEN_FAILED, new String[]{"Clear refresh token failed!"});
+        }
+        return true;
 
-        return false;
+        // todo assistant token另外处理
     }
 }

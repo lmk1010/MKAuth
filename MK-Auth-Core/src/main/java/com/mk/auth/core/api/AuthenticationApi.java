@@ -44,12 +44,6 @@ public class AuthenticationApi
     @Resource(name = "authenticateService")
     private AuthenticateService authenticateService;
 
-    @Resource(name = "clientService")
-    private ClientService clientService;
-
-    @Resource(name = "redisTemplate")
-    private RedisTemplate redisTemplate;
-
     @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
     @ApiOperation(value = "获取token", notes = "登陆认证接口")
     public ServerResponse toGetAccessToken(@RequestParam("username") String username,
@@ -60,7 +54,7 @@ public class AuthenticationApi
         {
             if(StringUtils.isBlank(username) || StringUtils.isBlank(password))
             {
-                throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CLIENT_CERTIFICATE, new String[]{"illeagr request param"});
+                throw new MKRuntimeException(AuthErrorCodeConstant.INVALID_PARAM, new String[]{"illeagr request param"});
             }
             // 认证 采用的token颁发 采用同一账户同一ip只能登陆一次的限制
             MKToken authenticate = authenticateService.authenticate(new AuthUser(username, password), request);
@@ -132,7 +126,6 @@ public class AuthenticationApi
             return ServerResponse.createByError(errorCodeFromException);
         }
     }
-
 
 
 
