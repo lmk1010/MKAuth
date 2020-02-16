@@ -52,18 +52,28 @@ public class AuthenticateServiceImpl implements AuthenticateService
         // 获取登陆ip
         String ipAddress = IPUtils.getIpAddress(request);
         // 校验是否已经认证过
-        String tokenPrefix = TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + "*";
-        Set<String> userTokenSet = redisTemplate.keys(tokenPrefix);
-        if (CollectionUtils.isNotEmpty(userTokenSet))
+        // 校验同一用户同一ip只能登陆一次
+        String tokenIPPrefix = TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + "*";
+        Set<String> userIPTokenSet = redisTemplate.keys(tokenIPPrefix);
+        if (CollectionUtils.isNotEmpty(userIPTokenSet))
         {
             log.warn(CommonConstant.LOG_PREFIX + "User already login!");
             throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
         }
+        // 校验同一用户不同ip只能同时登陆5次
+        String tokenUserPrefix = TokenUtils.WEB_TOKEN + authUser.getAuthName() + "*";
+        Set<String> userTokenSet = redisTemplate.keys(tokenUserPrefix);
+        if (CollectionUtils.isNotEmpty(userTokenSet) && userTokenSet.size() > 3)
+        {
+            log.warn(CommonConstant.LOG_PREFIX + "User already login!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.ALREADY_LOGIN);
+        }
+
         // 初始化登陆token信息
         MKToken mkToken = TokenUtils.initToken(TokenUtils.WEB_TOKEN);
         // token存入redis
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + TokenUtils.ACCESS_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + TokenUtils.REFRESH_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.MINUTES);
         return mkToken;
     }
 
