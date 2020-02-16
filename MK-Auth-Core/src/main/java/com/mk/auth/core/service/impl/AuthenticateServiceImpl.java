@@ -71,6 +71,11 @@ public class AuthenticateServiceImpl implements AuthenticateService
 
         // 初始化登陆token信息
         MKToken mkToken = TokenUtils.initToken(TokenUtils.WEB_TOKEN);
+        if (mkToken == null || StringUtils.isBlank(mkToken.getAccessToken()))
+        {
+            log.error(CommonConstant.LOG_PREFIX + "Init token failed!");
+            throw new MKRuntimeException(AuthErrorCodeConstant.INIT_TOKEN_FAILED);
+        }
         // token存入redis
         redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + authUser.getAuthName() + ipAddress + mkToken.getAccessToken(), JSON.toJSONString(authUser), mkToken.getExpire(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(TokenUtils.WEB_TOKEN + mkToken.getAccessToken() + mkToken.getRefreshToken(), mkToken.getAccessToken(), mkToken.getExpire() * 2, TimeUnit.SECONDS);

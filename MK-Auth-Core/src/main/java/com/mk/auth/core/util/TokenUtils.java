@@ -49,17 +49,17 @@ public class TokenUtils
     /** 初始化Token信息 */
     public static MKToken initToken(String tokenType)
     {
-        MKToken mkToken = new MKToken();
-        if (null == mkToken || StringUtils.isBlank(tokenType))
+        if (StringUtils.isBlank(tokenType))
         {
             log.error(CommonConstant.LOG_PREFIX + "Illega argument!");
-            throw new MKRuntimeException("Illega argument!");
+            return null;
         }
         if (Arrays.stream(tokenArray).noneMatch(type -> StringUtils.equals(tokenType,type)))
         {
             log.error(CommonConstant.LOG_PREFIX + "Token type is error!");
-            throw new MKRuntimeException("Token type is error! your type is:" + tokenType);
+            return null;
         }
+        MKToken mkToken = new MKToken();
         mkToken.setAccessToken(createAccessToken(tokenType));
         mkToken.setAccessType(tokenType);
         mkToken.setExpire(DEFAULT_EXPIRE);
@@ -69,7 +69,7 @@ public class TokenUtils
     }
 
     /** AccessToken的生成规则 */
-    /** token的组成: 前缀 + UUID + 用户名 + ip 实际用户名和ip不会返回给用户 每个由_分割*/
+    /** token的组成: UUID */
     private static String createAccessToken(String tokenType)
     {
         // TODO: 2020-02-02 后期要加规则

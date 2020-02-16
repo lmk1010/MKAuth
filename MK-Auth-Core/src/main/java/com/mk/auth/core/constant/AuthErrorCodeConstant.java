@@ -26,5 +26,7 @@ public interface AuthErrorCodeConstant
     // 清除token失败
     String DESTORY_TOKEN_FAILED = "900010";
 
+    String INIT_TOKEN_FAILED = "900011";
+
 
 }
