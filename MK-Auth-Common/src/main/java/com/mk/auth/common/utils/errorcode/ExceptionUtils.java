@@ -28,6 +28,10 @@ public class ExceptionUtils
                 code = ErrorCodeContant.COMMON_ERROR;
             }
             ErrorCode translate = ErrorCodeUtil.translate(code);
+            if (exception.getCause() != null)
+            {
+                loopExceptionErrorCode(translate, exception);
+            }
             String[] args = ((MKRuntimeException) exception).getArgs();
             if (args != null)
             {

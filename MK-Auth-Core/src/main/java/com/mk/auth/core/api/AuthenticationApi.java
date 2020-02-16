@@ -70,6 +70,7 @@ public class AuthenticationApi
     @RequestMapping(value = "/refreshAccessToken", method = RequestMethod.POST)
     public ServerResponse toRefreshAccessToken(@RequestParam("refresh_token") String refreshToken)
     {
+
         return ServerResponse.createBySuccess();
     }
 

@@ -29,9 +29,24 @@ public class MKRuntimeException extends RuntimeException
         this.args = args;
     }
 
+    public MKRuntimeException(String code, String[] args, Throwable cause) {
+        this.code = code;
+        this.args = args;
+        this.cause = cause;
+    }
+
+    public MKRuntimeException(String code, Throwable cause) {
+        this.code = code;
+        this.cause = cause;
+    }
+
     public MKRuntimeException(String code)
     {
         this.code = code;
+    }
+
+    public MKRuntimeException(Throwable cause) {
+        this.cause = cause;
     }
 
     @Override

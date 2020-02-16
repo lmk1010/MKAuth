@@ -2,7 +2,11 @@ package com.mk.auth;
 
 import static org.junit.Assert.assertTrue;
 
+import com.mk.auth.common.entity.ErrorCode;
+import com.mk.auth.common.exception.MKRuntimeException;
+import com.mk.auth.common.utils.errorcode.ExceptionUtils;
 import com.mk.auth.core.AuthCoreApplication;
+import com.mk.auth.core.constant.AuthErrorCodeConstant;
 import com.mk.auth.core.dao.UserDao;
 import com.mk.auth.core.entity.AuthClient;
 import com.mk.auth.core.entity.AuthRole;
@@ -47,6 +51,34 @@ public class AppTest
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+
+    @Test
+    public void exceptionTest()
+    {
+        try
+        {
+            test();
+        }
+        catch (Exception e)
+        {
+            System.err.println(e);
+            ErrorCode errorCodeFromException = ExceptionUtils.getErrorCodeFromException(e);
+            System.err.println(errorCodeFromException);
+        }
+    }
+
+    public void test()
+    {
+        try
+        {
+            String asd = "";
+            asd.substring(0,3);
+        }
+        catch (Exception e)
+        {
+            throw new MKRuntimeException(AuthErrorCodeConstant.INVAILD_CLIENT_CERTIFICATE, new String[]{"token access"});
+        }
+    }
 
     @Test
     public void testClass()
